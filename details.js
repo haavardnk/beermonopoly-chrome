@@ -27,10 +27,16 @@ if (document.getElementsByClassName("product__category-name")[0].innerText.inclu
     document.getElementsByClassName('product__layout-wrapper')[0].appendChild(untappd);
 
     getBeer(beer_id).then(function (data) {
-        var date = new Date(data.untpd_updated);
-        link.href = data.untpd_url;
-        link.innerText = data.rating.toPrecision(3) + " (" + data.checkins + ")";
-        updated.innerText = "Oppdatert: " + date.toLocaleDateString() + " " + date.toLocaleTimeString();
+        if (data.rating !== null) {
+            var date = new Date(data.untpd_updated);
+            link.href = data.untpd_url;
+            link.innerText = data.rating.toPrecision(3) + " (" + data.checkins + ")";
+            updated.innerText = "Oppdatert: " + date.toLocaleDateString() + " " + date.toLocaleTimeString();
+        }
+        else {
+            link.innerText = "No match";
+        }
+
     });
 
 }
