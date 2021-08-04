@@ -65,23 +65,11 @@ function main() {
 }
 
 // Wait for Vinmonopolet to load beers
-let observer = new MutationObserver(function (mutations, observer) {
-    let products = document.getElementsByClassName("product-item");
+document.arrive(".product-item__image", function () {
     let untappd = document.getElementsByClassName("untappd");
-    if (products.length == 24 && untappd.length == 0 && state == 0) {
+    if (untappd.length == 0 && state == 0) {
         state = 1;
         main();
         return;
     }
-});
-
-
-// Start observing DOM
-const targetNode = document.querySelector(".site");
-observer.observe(targetNode, {
-    childList: true,
-    subtree: true,
-    attributes: true,
-    characterData: true,
-
 });
