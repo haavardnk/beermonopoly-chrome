@@ -14,12 +14,14 @@
                 "assets/css/styles.css"
             ],
             "js": [
+                "assets/js/arrive.min.js",
                 "assets/js/sweetalert2.all.min.js",
                 "details.js"
             ],
             "matches": [
                 "https://*.vinmonopolet.no/*/*/*/p/*"
-            ]
+            ],
+            "run_at": "document_end"
         },
         {
             "css": [
