@@ -18,7 +18,7 @@ function createRatings(products, beer_info) {
                 link.href = beer_info[id].untpd_url;
             }
             else {
-                link.innerText = "No match";
+                link.innerText = "Ingen match";
             }
 
             untappd.appendChild(logo);

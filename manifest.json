@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Beermonopoly",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Add Untappd information to Vinmonopolet",
     "icons": {
         "16": "assets/img/icon16.png",
@@ -14,7 +14,8 @@
                 "assets/css/styles.css"
             ],
             "js": [
-                "details.js"
+                "details.js",
+                "assets/js/sweetalert2.all.min.js"
             ],
             "matches": [
                 "https://*.vinmonopolet.no/*/*/*/p/*"
