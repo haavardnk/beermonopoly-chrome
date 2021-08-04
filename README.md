@@ -1,1 +1,1 @@
-beermonopoly-chrome
+# Beermonopoly Chrome Extension
