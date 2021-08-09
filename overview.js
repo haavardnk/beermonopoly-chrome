@@ -1,4 +1,5 @@
 var state = 0;
+var observe_state = 0;
 
 function createRatings(products, beer_info) {
     for (let i = 0; i < products.length; i++) {
@@ -70,6 +71,24 @@ document.arrive(".product-item__image", function () {
     if (untappd.length == 0 && state == 0) {
         state = 1;
         main();
-        return;
+    }
+
+    // Add observers of facet changes
+    if (observe_state == 0) {
+        document.arrive(".facet-value--selected", function () {
+            if (state == 0) {
+                [...document.getElementsByClassName("untappd")].map(n => n && n.remove());
+                state = 1;
+                setTimeout(main, 100);
+            }
+        });
+        document.leave(".facet-value--selected", function () {
+            if (state == 0) {
+                [...document.getElementsByClassName("untappd")].map(n => n && n.remove());
+                state = 1;
+                setTimeout(main, 100);
+            }
+        });
+        observe_state = 1;
     }
 });
