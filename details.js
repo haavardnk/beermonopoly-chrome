@@ -39,7 +39,7 @@ function main() {
 
         untappd.classList.add("untappd");
         wrong.classList.add("suggest");
-        triangle.classList.add("triangle");
+        triangle.classList.add("triangle_detail");
         logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
         logo_user.src = chrome.runtime.getURL("assets/img/user.svg");
         checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
@@ -54,7 +54,6 @@ function main() {
         // Get beer info
         chrome.storage.sync.get({ api_token: null }, async function (result) {
             getBeer(beer_id, result.api_token).then(function (data) {
-                console.log(data)
                 if (data.rating !== null) {
                     var date = new Date(data.untpd_updated);
                     link.href = data.untpd_url;
@@ -62,13 +61,13 @@ function main() {
                     updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
                     wrong.innerText = "Feil øl?";
                     // If beer checked in
-                    if (data.hasOwnProperty('user_checked_in')) {
+                    if (data.hasOwnProperty('user_checked_in') && data.user_checked_in.length > 0) {
                         untappd.insertBefore(logo_user, untappd.childNodes[2])
                         untappd.insertBefore(link_checkin, untappd.childNodes[3])
                         link_checkin.href = data.user_checked_in[0].checkin_url
                         link_checkin.innerText = data.user_checked_in[0].rating.toPrecision(3);
                         triangle.appendChild(checkmark);
-                        document.getElementsByClassName('product__details clearfix')[0].prepend(triangle);
+                        document.getElementsByClassName('product__details--top')[0].prepend(triangle);
                     }
                 }
                 else {

@@ -34,7 +34,28 @@
     text-transform:none;
 }
 
-.triangle {
+.triangle_detail {
+    width: 0;
+    height: 0;
+    top: -65px;
+    left: 0px;
+    border-top: 35px solid #608A32;
+    border-right: 35px solid transparent;
+    position: absolute;
+}
+
+.triangle_detail img {
+    position: absolute;
+    height: 13px;
+    width: 13px;
+    color: white;
+    top: -30px;
+    left: 6px;
+    display:block;
+    margin:auto;
+}
+
+.triangle_overview {
     width: 0;
     height: 0;
     top: 0px;
@@ -44,7 +65,7 @@
     position: absolute;
 }
 
-.triangle img {
+.triangle_overview img {
     position: absolute;
     height: 13px;
     width: 13px;

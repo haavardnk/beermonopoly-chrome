@@ -18,7 +18,7 @@ function createRatings(products, beer_info) {
             var checkmark = document.createElement("img");
 
             untappd.classList.add("untappd");
-            triangle.classList.add("triangle");
+            triangle.classList.add("triangle_overview");
             logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
             logo_user.src = chrome.runtime.getURL("assets/img/user.svg");
             checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
