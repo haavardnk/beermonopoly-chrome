@@ -27,12 +27,20 @@ div:hover {
     transform: translateX(-50%) scale(1.1);
 }
 
-img {
+.powered {
     height: 20px;
-    float: right;
-    margin-bottom: 10px;
+    position: absolute;
+    bottom:14px;
+    right:10px;
 }
 
 h1 {
     font-size: 1.75em;
+}
+
+.kofi {
+    float: left;
+    border:0px;
+    height:25px;
+    margin-bottom: 10px;
 }
