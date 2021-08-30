@@ -1,0 +1,38 @@
+body {
+    width: 300px;
+    height: auto;
+}
+
+div {
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50%;
+    height: 25%;
+    padding: 5px;
+    font-size: 2em;
+    background-color: #FFB000;
+    border-radius: 5px;
+    text-align: center;
+    color: white;
+    font-family: ProximaNova, Helvetica, sans-serif;
+    font-weight: bold;
+    margin-bottom: 15px;
+    cursor: pointer;
+    transition-duration: 0.3s;
+}
+
+div:hover {
+    background-color: black;
+    transform: translateX(-50%) scale(1.1);
+}
+
+img {
+    height: 20px;
+    float: right;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 1.75em;
+}

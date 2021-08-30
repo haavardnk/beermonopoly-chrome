@@ -1,8 +1,21 @@
-async function getBeer(beer_id) {
-    let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
-        + "/?fields=vmp_id,rating,checkins,untpd_url,untpd_updated");
-    let data = await response.json();
-    return data;
+async function getBeer(beer_id, api_token) {
+    // Check if authenticated
+    if (api_token) {
+        let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
+            + "/?fields=vmp_id,rating,checkins,untpd_url,untpd_updated,user_checked_in", {
+            headers: {
+                Authorization: `Token ${api_token}`
+            }
+        });
+        let data = await response.json();
+        return data
+    } else {
+        let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
+            + "/?fields=vmp_id,rating,checkins,untpd_url,untpd_updated");
+        let data = await response.json();
+        return data
+    };
+
 }
 
 function main() {
@@ -16,13 +29,20 @@ function main() {
         // Construct HTML
         var untappd = document.createElement("div");
         var logo = document.createElement("img");
+        var logo_user = document.createElement("img");
         var link = document.createElement("a");
+        var link_checkin = document.createElement("a");
         var updated = document.createElement("p");
         var wrong = document.createElement("a");
+        var triangle = document.createElement("div");
+        var checkmark = document.createElement("img");
 
         untappd.classList.add("untappd");
         wrong.classList.add("suggest");
+        triangle.classList.add("triangle");
         logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
+        logo_user.src = chrome.runtime.getURL("assets/img/user.svg");
+        checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
 
         untappd.appendChild(logo);
         untappd.appendChild(link);
@@ -32,20 +52,32 @@ function main() {
         document.getElementsByClassName('product__layout-wrapper')[0].appendChild(untappd);
 
         // Get beer info
-        getBeer(beer_id).then(function (data) {
-            if (data.rating !== null) {
-                var date = new Date(data.untpd_updated);
-                link.href = data.untpd_url;
-                link.innerText = data.rating.toPrecision(3) + " (" + data.checkins + ")";
-                updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
-                wrong.innerText = "Feil øl?";
-            }
-            else {
-                link.innerText = "Ingen match";
-                wrong.innerText = "Foreslå Untappd match";
-            }
-
+        chrome.storage.sync.get({ api_token: null }, async function (result) {
+            getBeer(beer_id, result.api_token).then(function (data) {
+                console.log(data)
+                if (data.rating !== null) {
+                    var date = new Date(data.untpd_updated);
+                    link.href = data.untpd_url;
+                    link.innerText = data.rating.toPrecision(3) + " (" + data.checkins + ")";
+                    updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
+                    wrong.innerText = "Feil øl?";
+                    // If beer checked in
+                    if (data.hasOwnProperty('user_checked_in')) {
+                        untappd.insertBefore(logo_user, untappd.childNodes[2])
+                        untappd.insertBefore(link_checkin, untappd.childNodes[3])
+                        link_checkin.href = data.user_checked_in[0].checkin_url
+                        link_checkin.innerText = data.user_checked_in[0].rating.toPrecision(3);
+                        triangle.appendChild(checkmark);
+                        document.getElementsByClassName('product__details clearfix')[0].prepend(triangle);
+                    }
+                }
+                else {
+                    link.innerText = "Ingen match";
+                    wrong.innerText = "Foreslå Untappd match";
+                }
+            });
         });
+
 
         // Report wrong match modal
         wrong.addEventListener("click", function (e) {
@@ -88,7 +120,6 @@ function main() {
                                 confirmButtonColor: '#002025',
                             });
                         }
-
                     }
                 }
                 else if (result.isConfirmed && !result.value) {
@@ -98,7 +129,6 @@ function main() {
                         icon: 'error',
                         confirmButtonColor: '#002025',
                     });
-
                 }
             })
         });
