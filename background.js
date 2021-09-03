@@ -19,7 +19,6 @@ function is_user_signed_in() {
 function create_auth_endpoint() {
     let oauth_endpoint =
         `https://untappd.com/oauth/authenticate/?client_id=${CLIENT_ID}&response_type=code&redirect_url=${REDIRECT_URI}`;
-
     return oauth_endpoint;
 }
 
@@ -33,13 +32,20 @@ async function get_untappd_token(untappd_code) {
     let response = await fetch(create_auth_callback(untappd_code), {
         method: 'GET', // *GET, POST, PUT, DELETE, etc.
         mode: 'no-cors', // no-cors, *cors, same-origin
+        headers: {
+            'User-Agent': 'chrome-extension:Beermonopoly'
+        },
     })
     let data = response.json();
     return data;
 }
 
 async function get_untappd_username(untappd_token) {
-    let response = await fetch(`https://api.untappd.com/v4/user/info/?access_token=${untappd_token}`)
+    let response = await fetch(`https://api.untappd.com/v4/user/info/?access_token=${untappd_token}`, {
+        headers: {
+            'User-Agent': 'chrome-extension:Beermonopoly'
+        },
+    })
     return response.json()
 }
 
