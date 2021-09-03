@@ -58,6 +58,8 @@ function main() {
                     var date = new Date(data.untpd_updated);
                     link.href = data.untpd_url;
                     link.innerText = data.rating.toPrecision(3) + " (" + data.checkins + ")";
+                    link.target = "_blank";
+                    link.rel = "noopener noreferrer";
                     updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
                     wrong.innerText = "Feil øl?";
                     // If beer checked in
@@ -66,6 +68,8 @@ function main() {
                         untappd.insertBefore(link_checkin, untappd.childNodes[3])
                         link_checkin.href = data.user_checked_in[0].checkin_url
                         link_checkin.innerText = data.user_checked_in[0].rating.toPrecision(3);
+                        link_checkin.target = "_blank";
+                        link_checkin.rel = "noopener noreferrer";
                         triangle.appendChild(checkmark);
                         document.getElementsByClassName('product__details--top')[0].prepend(triangle);
                     }

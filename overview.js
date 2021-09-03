@@ -31,12 +31,16 @@ function createRatings(products, beer_info) {
             if (beer_info[id].rating !== null) {
                 link.innerText = beer_info[id].rating.toPrecision(3);
                 link.href = beer_info[id].untpd_url;
+                link.target = "_blank";
+                link.rel = "noopener noreferrer";
                 // If beer checked in
                 if (beer_info[id].hasOwnProperty('user_checked_in') && beer_info[id].user_checked_in.length > 0) {
                     untappd.insertBefore(logo_user, untappd.childNodes[2]);
                     untappd.insertBefore(link_checkin, untappd.childNodes[3]);
                     link_checkin.href = beer_info[id].user_checked_in[0].checkin_url;
                     link_checkin.innerText = beer_info[id].user_checked_in[0].rating.toPrecision(3);
+                    link_checkin.target = "_blank";
+                    link_checkin.rel = "noopener noreferrer";
                     triangle.appendChild(checkmark);
                     products[i].prepend(triangle);
                 };
