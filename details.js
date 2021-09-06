@@ -18,6 +18,10 @@ async function getBeer(beer_id, api_token) {
 
 }
 
+function kFormatter(num) {
+    return Math.abs(num) > 999 ? ((num / 1000).toFixed(0)) + 'k' : num
+}
+
 function main() {
     if (document.getElementsByClassName("product__category-name")[0].innerText.includes("ØL") ||
         document.getElementsByClassName("product__category-name")[0].innerText.includes("SIDER") ||
@@ -59,7 +63,7 @@ function main() {
                 if (data.rating !== null) {
                     var date = new Date(data.untpd_updated);
                     link.href = data.untpd_url;
-                    link.innerText = data.rating.toPrecision(3) + " (" + data.checkins + ")";
+                    link.innerText = data.rating.toPrecision(3) + " (" + kFormatter(data.checkins) + ")";
                     link.target = "_blank";
                     link.rel = "noopener noreferrer";
                     updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
