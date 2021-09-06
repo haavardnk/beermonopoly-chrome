@@ -19,7 +19,9 @@ async function getBeer(beer_id, api_token) {
 }
 
 function main() {
-    if (document.getElementsByClassName("product__category-name")[0].innerText.includes("ØL")) {
+    if (document.getElementsByClassName("product__category-name")[0].innerText.includes("ØL") ||
+        document.getElementsByClassName("product__category-name")[0].innerText.includes("SIDER") ||
+        document.getElementsByClassName("product__category-name")[0].innerText.includes("MJØD")) {
 
         // Get beer id from DOM
         var beer_id = document.getElementsByClassName("product__tab-list")[0]

@@ -1,9 +1,10 @@
 var state = 0;
 var observe_state = 0;
+var categories = ["ØL", "SIDER", "MJØD"]
 
 function createRatings(products, beer_info) {
     for (let i = 0; i < products.length; i++) {
-        if (products[i].getElementsByClassName("product__category-name")[0].innerText.includes("ØL") &&
+        if (categories.includes(products[i].getElementsByClassName("product__category-name")[0].innerText) &&
             products[i].getElementsByClassName("untappd").length == 0) {
 
             let id = products[i].getElementsByClassName("product__code")[0].innerText;
@@ -55,7 +56,7 @@ function createRatings(products, beer_info) {
 function getBeerIds(products) {
     let ids = [];
     for (let i = 0; i < products.length; i++) {
-        if (products[i].getElementsByClassName("product__category-name")[0].innerText.includes("ØL")) {
+        if (categories.includes(products[i].getElementsByClassName("product__category-name")[0].innerText)) {
             ids.push(products[i].getElementsByClassName("product__code")[0].innerText);
         }
     }
