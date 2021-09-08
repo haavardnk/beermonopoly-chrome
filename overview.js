@@ -11,21 +11,34 @@ function createRatings(products, beer_info) {
 
             // Construct HTML
             var untappd = document.createElement("div");
+            var untappd_rating = document.createElement("div");
+            var user_rating = document.createElement("span");
             var logo = document.createElement("img");
             var logo_user = document.createElement("img");
             var link = document.createElement("a");
             var link_checkin = document.createElement("a");
             var triangle = document.createElement("div");
             var checkmark = document.createElement("img");
+            var star1 = document.createElement("img");
+            var star2 = document.createElement("img");
 
             untappd.classList.add("untappd");
-            triangle.classList.add("triangle_overview");
+            triangle.classList.add("triangle-overview");
+            logo.classList.add("logo-overview")
+            logo_user.classList.add("logo-overview")
+            star1.classList.add("star-overview")
+            star2.classList.add("star-overview")
+
             logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
             logo_user.src = chrome.runtime.getURL("assets/img/user.svg");
             checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
+            star1.src = chrome.runtime.getURL("assets/img/star-solid.svg");
+            star2.src = chrome.runtime.getURL("assets/img/star-solid.svg");
 
-            untappd.appendChild(logo);
-            untappd.appendChild(link);
+            untappd.appendChild(untappd_rating)
+            untappd_rating.appendChild(logo);
+            untappd_rating.appendChild(link);
+            untappd_rating.appendChild(star1);
 
             products[i].getElementsByClassName('product-stock-status')[0].appendChild(untappd);
 
@@ -36,8 +49,10 @@ function createRatings(products, beer_info) {
                 link.rel = "noopener noreferrer";
                 // If beer checked in
                 if (beer_info[id].hasOwnProperty('user_checked_in') && beer_info[id].user_checked_in.length > 0) {
-                    untappd.insertBefore(logo_user, untappd.childNodes[2]);
-                    untappd.insertBefore(link_checkin, untappd.childNodes[3]);
+                    untappd_rating.appendChild(user_rating)
+                    user_rating.appendChild(logo_user);
+                    user_rating.appendChild(link_checkin);
+                    user_rating.appendChild(star2);
                     link_checkin.href = beer_info[id].user_checked_in[0].checkin_url;
                     link_checkin.innerText = beer_info[id].user_checked_in[0].rating.toPrecision(3);
                     link_checkin.target = "_blank";

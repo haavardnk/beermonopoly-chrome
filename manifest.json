@@ -19,6 +19,7 @@
             "js": [
                 "assets/js/arrive.min.js",
                 "assets/js/sweetalert2.all.min.js",
+                "assets/js/functions.js",
                 "details.js"
             ],
             "matches": [
@@ -32,6 +33,7 @@
             ],
             "js": [
                 "assets/js/arrive.min.js",
+                "assets/js/functions.js",
                 "overview.js"
             ],
             "matches": [
@@ -47,7 +49,10 @@
             "resources": [
                 "assets/img/untappd.svg",
                 "assets/img/user.svg",
-                "assets/img/check-solid.svg"
+                "assets/img/check-solid.svg",
+                "assets/img/star-solid.svg",
+                "assets/img/star-hollow.svg",
+                "assets/img/star-half.svg"
             ],
             "matches": [
                 "https://*.vinmonopolet.no/*"
