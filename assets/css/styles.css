@@ -1,3 +1,5 @@
+
+
 .untappd {
     color: #334d51;
     font-size: 12px;
@@ -7,26 +9,12 @@
     margin-top: 16px;
 }
 
-.untappd img {
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: 20px 20px;
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
-    margin-right: 8px;
-}
-
 .untappd p {
     font-size: 11px;
     font-weight: 300;
     text-transform: initial;
-    margin-top: 1px;
+    margin-top: 3px;
     margin-bottom: 0px;
-}
-
-.untappd a {
-    margin-right: 20px;
 }
 
 .suggest {
@@ -35,7 +23,7 @@
     text-transform:none;
 }
 
-.triangle_detail {
+.triangle-detail {
     width: 0;
     height: 0;
     top: -65px;
@@ -45,7 +33,7 @@
     position: absolute;
 }
 
-.triangle_detail img {
+.triangle-detail img {
     position: absolute;
     height: 13px;
     width: 13px;
@@ -56,7 +44,7 @@
     margin:auto;
 }
 
-.triangle_overview {
+.triangle-overview {
     width: 0;
     height: 0;
     top: 0px;
@@ -66,7 +54,7 @@
     position: absolute;
 }
 
-.triangle_overview img {
+.triangle-overview img {
     position: absolute;
     height: 13px;
     width: 13px;
@@ -76,3 +64,36 @@
     display:block;
     margin:auto;
 }
+
+.user-rating-detail {
+    margin-top: 10px;
+}
+
+.logo-detail {
+    height: 20px;
+    width: 20px;
+}
+
+.logo-overview {
+    height: 20px;
+    width: 20px;
+    margin-right: 8px;
+}
+
+.star-overview {
+    height: 15px;
+    vertical-align: -3px;
+    margin-right: 20px;
+}
+
+.stars {
+    margin-left: 8px;
+    margin-right: 5px;
+}
+
+.stars img {
+    height: 16px;
+    display: inline-block;
+    vertical-align: -3px;
+}
+

@@ -18,10 +18,6 @@ async function getBeer(beer_id, api_token) {
 
 }
 
-function kFormatter(num) {
-    return Math.abs(num) > 999 ? ((num / 1000).toFixed(0)) + 'k' : num
-}
-
 function main() {
     if (document.getElementsByClassName("product__category-name")[0].innerText.includes("ØL") ||
         document.getElementsByClassName("product__category-name")[0].innerText.includes("SIDER") ||
@@ -34,6 +30,8 @@ function main() {
 
         // Construct HTML
         var untappd = document.createElement("div");
+        var untappd_rating = document.createElement("div");
+        var user_rating = document.createElement("div");
         var logo = document.createElement("img");
         var logo_user = document.createElement("img");
         var link = document.createElement("a");
@@ -45,13 +43,18 @@ function main() {
 
         untappd.classList.add("untappd");
         wrong.classList.add("suggest");
-        triangle.classList.add("triangle_detail");
+        triangle.classList.add("triangle-detail");
+        user_rating.classList.add("user-rating-detail")
+        logo.classList.add("logo-detail")
+        logo_user.classList.add("logo-detail")
+
         logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
         logo_user.src = chrome.runtime.getURL("assets/img/user.svg");
         checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
 
-        untappd.appendChild(logo);
-        untappd.appendChild(link);
+        untappd.appendChild(untappd_rating)
+        untappd_rating.appendChild(logo);
+        untappd_rating.appendChild(link);
         untappd.appendChild(updated);
         untappd.appendChild(wrong);
 
@@ -62,6 +65,7 @@ function main() {
             getBeer(beer_id, result.api_token).then(function (data) {
                 if (data.rating !== null) {
                     var date = new Date(data.untpd_updated);
+                    untappd_rating.insertBefore(ratingToStars(data.rating.toPrecision(3)), untappd_rating.childNodes[1])
                     link.href = data.untpd_url;
                     link.innerText = data.rating.toPrecision(3) + " (" + kFormatter(data.checkins) + ")";
                     link.target = "_blank";
@@ -70,8 +74,10 @@ function main() {
                     wrong.innerText = "Feil øl?";
                     // If beer checked in
                     if (data.hasOwnProperty('user_checked_in') && data.user_checked_in.length > 0) {
-                        untappd.insertBefore(logo_user, untappd.childNodes[2])
-                        untappd.insertBefore(link_checkin, untappd.childNodes[3])
+                        untappd.insertBefore(user_rating, untappd.childNodes[1])
+                        user_rating.appendChild(logo_user)
+                        user_rating.appendChild(ratingToStars(data.user_checked_in[0].rating.toPrecision(3)))
+                        user_rating.appendChild(link_checkin)
                         link_checkin.href = data.user_checked_in[0].checkin_url
                         link_checkin.innerText = data.user_checked_in[0].rating.toPrecision(3);
                         link_checkin.target = "_blank";
