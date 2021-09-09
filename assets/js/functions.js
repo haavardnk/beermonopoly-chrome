@@ -15,10 +15,10 @@ function ratingToStars(rating) {
     stars = [star1, star2, star3, star4, star5]
 
     for (let i = 0; i < stars.length; i++) {
-        if (rating > i + 0.75) {
+        if (rating >= i + 0.75) {
             stars[i].src = chrome.runtime.getURL("assets/img/star-solid.svg");
         }
-        else if (rating > i + 0.25) {
+        else if (rating >= i + 0.25) {
             stars[i].src = chrome.runtime.getURL("assets/img/star-half.svg");
         }
         else {
