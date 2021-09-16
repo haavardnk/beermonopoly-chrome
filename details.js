@@ -2,7 +2,7 @@ async function getBeer(beer_id, api_token) {
     // Check if authenticated
     if (api_token) {
         let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
-            + "/?fields=vmp_id,ibu,rating,checkins,untpd_url,untpd_updated,user_checked_in", {
+            + "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated,user_checked_in", {
             headers: {
                 Authorization: `Token ${api_token}`
             }
@@ -11,7 +11,7 @@ async function getBeer(beer_id, api_token) {
         return data
     } else {
         let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
-            + "/?fields=vmp_id,ibu,rating,checkins,untpd_url,untpd_updated");
+            + "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated");
         let data = await response.json();
         return data
     };
@@ -83,9 +83,14 @@ function main() {
                         document.getElementsByClassName("product__contents-list")[0]
                             .insertBefore(ibu, document.getElementsByClassName("product__contents-list")[0].childNodes[1])
                     }
+                    // Add Untappd style
+                    document.getElementsByClassName("product__tab-list")[0].getElementsByTagName("li")[0]
+                        .getElementsByTagName("span")[1].textContent += " (" + data.style + ")"
+                    document.getElementsByClassName("product__category-name")[0].textContent += " (" + data.style + ")"
 
-                    // If beer checked in
+                    // If beer checked in by user
                     if (data.hasOwnProperty('user_checked_in') && data.user_checked_in.length > 0) {
+                        // User rating
                         untappd.insertBefore(user_rating, untappd.childNodes[1])
                         user_rating.appendChild(logo_user)
                         user_rating.appendChild(ratingToStars(data.user_checked_in[0].rating.toPrecision(3)))
@@ -94,6 +99,7 @@ function main() {
                         link_checkin.innerText = data.user_checked_in[0].rating.toPrecision(3);
                         link_checkin.target = "_blank";
                         link_checkin.rel = "noopener noreferrer";
+                        // Checked in triangle
                         triangle.appendChild(checkmark);
                         document.getElementsByClassName('product__details--top')[0].prepend(triangle);
                     }
