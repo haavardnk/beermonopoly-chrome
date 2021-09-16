@@ -2,7 +2,7 @@ async function getBeer(beer_id, api_token) {
     // Check if authenticated
     if (api_token) {
         let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
-            + "/?fields=vmp_id,rating,checkins,untpd_url,untpd_updated,user_checked_in", {
+            + "/?fields=vmp_id,ibu,rating,checkins,untpd_url,untpd_updated,user_checked_in", {
             headers: {
                 Authorization: `Token ${api_token}`
             }
@@ -11,7 +11,7 @@ async function getBeer(beer_id, api_token) {
         return data
     } else {
         let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
-            + "/?fields=vmp_id,rating,checkins,untpd_url,untpd_updated");
+            + "/?fields=vmp_id,ibu,rating,checkins,untpd_url,untpd_updated");
         let data = await response.json();
         return data
     };
@@ -64,14 +64,26 @@ function main() {
         chrome.storage.sync.get({ api_token: null }, async function (result) {
             getBeer(beer_id, result.api_token).then(function (data) {
                 if (data.rating !== null) {
-                    var date = new Date(data.untpd_updated);
+                    // Untappd rating
                     untappd_rating.insertBefore(ratingToStars(data.rating.toPrecision(3)), untappd_rating.childNodes[1])
                     link.href = data.untpd_url;
                     link.innerText = data.rating.toPrecision(3) + " (" + kFormatter(data.checkins) + ")";
                     link.target = "_blank";
                     link.rel = "noopener noreferrer";
+                    // Updated datetime
+                    var date = new Date(data.untpd_updated);
                     updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
+                    // Link to suggest untappd match
                     wrong.innerText = "Feil øl?";
+                    // Add IBU for beer
+                    if (document.getElementsByClassName("product__category-name")[0].innerText.includes("ØL")) {
+                        ibu = document.getElementsByClassName("product__contents-list")[0].getElementsByTagName("li")[0].cloneNode(deep = true)
+                        ibu.firstChild.data = "Ibu"
+                        ibu.getElementsByTagName("span")[0].textContent = data.ibu
+                        document.getElementsByClassName("product__contents-list")[0]
+                            .insertBefore(ibu, document.getElementsByClassName("product__contents-list")[0].childNodes[1])
+                    }
+
                     // If beer checked in
                     if (data.hasOwnProperty('user_checked_in') && data.user_checked_in.length > 0) {
                         untappd.insertBefore(user_rating, untappd.childNodes[1])
