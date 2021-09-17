@@ -57,6 +57,20 @@
                 "https://*.vinmonopolet.no/vmp/cart/*"
             ],
             "run_at": "document_end"
+        },
+        {
+            "css": [
+                "assets/css/styles.css"
+            ],
+            "js": [
+                "assets/js/arrive.min.js",
+                "assets/js/functions.js",
+                "wishlist.js"
+            ],
+            "matches": [
+                "https://*.vinmonopolet.no/wishlist/*"
+            ],
+            "run_at": "document_end"
         }
     ],
     "web_accessible_resources": [
