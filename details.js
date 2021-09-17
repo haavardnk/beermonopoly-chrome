@@ -75,7 +75,7 @@ function main() {
                     updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
                     // Link to suggest untappd match
                     wrong.innerText = "Feil øl?";
-                    // Add IBU for beer
+                    // Untappd IBU for beers
                     if (document.getElementsByClassName("product__category-name")[0].innerText.includes("ØL")) {
                         ibu = document.getElementsByClassName("product__contents-list")[0].getElementsByTagName("li")[0].cloneNode(deep = true)
                         ibu.firstChild.data = "Ibu"
@@ -83,10 +83,17 @@ function main() {
                         document.getElementsByClassName("product__contents-list")[0]
                             .insertBefore(ibu, document.getElementsByClassName("product__contents-list")[0].childNodes[1])
                     }
-                    // Add Untappd style
-                    document.getElementsByClassName("product__tab-list")[0].getElementsByTagName("li")[0]
-                        .getElementsByTagName("span")[1].textContent += " (" + data.style + ")"
-                    document.getElementsByClassName("product__category-name")[0].textContent += " (" + data.style + ")"
+                    // Untappd style
+                    if (document.getElementsByClassName("product__category-name")[0].innerText.includes("ØL")) {
+                        document.getElementsByClassName("product__category-name")[0].textContent = "Øl - " + data.style
+                        document.getElementsByClassName("product__tab-list")[0].getElementsByTagName("li")[0]
+                            .getElementsByTagName("span")[1].textContent += " (" + data.style + ")"
+                    } else {
+                        document.getElementsByClassName("product__category-name")[0].textContent += " - " + data.style.split("-")[1]
+                        document.getElementsByClassName("product__tab-list")[0].getElementsByTagName("li")[0]
+                            .getElementsByTagName("span")[1].textContent += " (" + data.style + ")"
+                    }
+
 
                     // If beer checked in by user
                     if (data.hasOwnProperty('user_checked_in') && data.user_checked_in.length > 0) {

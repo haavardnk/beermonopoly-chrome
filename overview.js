@@ -43,12 +43,22 @@ function createRatings(products, beer_info) {
             products[i].getElementsByClassName('product-stock-status')[0].appendChild(untappd);
 
             if (beer_info[id].rating !== null) {
+                // Untappd rating
                 link.innerText = beer_info[id].rating.toPrecision(3);
                 link.href = beer_info[id].untpd_url;
                 link.target = "_blank";
                 link.rel = "noopener noreferrer";
-                // If beer checked in
+                // Untappd style
+                if (products[i].getElementsByClassName("product__category-name")[0].innerText.includes("ØL")) {
+                    products[i].getElementsByClassName("product__category-name")[0].textContent += " - " + beer_info[id].style
+                } else {
+                    products[i].getElementsByClassName("product__category-name")[0].textContent += " - " + beer_info[id].style.split("-")[1]
+                }
+
+
+                // If beer checked in by user
                 if (beer_info[id].hasOwnProperty('user_checked_in') && beer_info[id].user_checked_in.length > 0) {
+                    // User rating
                     untappd_rating.appendChild(user_rating)
                     user_rating.appendChild(logo_user);
                     user_rating.appendChild(link_checkin);
@@ -57,6 +67,7 @@ function createRatings(products, beer_info) {
                     link_checkin.innerText = beer_info[id].user_checked_in[0].rating.toPrecision(3);
                     link_checkin.target = "_blank";
                     link_checkin.rel = "noopener noreferrer";
+                    // Checked in triangle
                     triangle.appendChild(checkmark);
                     products[i].prepend(triangle);
                 };
@@ -81,7 +92,7 @@ function getBeerIds(products) {
 async function getBeerInfo(beer_ids, api_token) {
     if (api_token) {
         let response = await fetch("https://api.beermonopoly.com/beers/?beers=" + beer_ids.join()
-            + "&fields=vmp_id,rating,untpd_url,user_checked_in", {
+            + "&fields=vmp_id,style,rating,untpd_url,user_checked_in", {
             headers: {
                 Authorization: `Token ${api_token}`
             }
@@ -90,7 +101,7 @@ async function getBeerInfo(beer_ids, api_token) {
         return data;
     } else {
         let response = await fetch("https://api.beermonopoly.com/beers/?beers=" + beer_ids.join()
-            + "&fields=vmp_id,rating,untpd_url");
+            + "&fields=vmp_id,style,rating,untpd_url");
         let data = await response.json();
         return data;
     };
