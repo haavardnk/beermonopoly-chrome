@@ -1,5 +1,4 @@
 var state = 0;
-var observe_state = 0;
 var categories = ["ØL", "SIDER", "MJØD"]
 
 function createRatings(products, beer_info) {

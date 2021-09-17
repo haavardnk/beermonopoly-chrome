@@ -24,22 +24,22 @@ function main() {
         document.getElementsByClassName("product__category-name")[0].innerText.includes("MJØD")) {
 
         // Get beer id from DOM
-        var beer_id = document.getElementsByClassName("product__tab-list")[0]
+        let beer_id = document.getElementsByClassName("product__tab-list")[0]
             .getElementsByTagName("li")[1]
             .getElementsByTagName("span")[1].innerText;
 
         // Construct HTML
-        var untappd = document.createElement("div");
-        var untappd_rating = document.createElement("div");
-        var user_rating = document.createElement("div");
-        var logo = document.createElement("img");
-        var logo_user = document.createElement("img");
-        var link = document.createElement("a");
-        var link_checkin = document.createElement("a");
-        var updated = document.createElement("p");
-        var wrong = document.createElement("a");
-        var triangle = document.createElement("div");
-        var checkmark = document.createElement("img");
+        let untappd = document.createElement("div");
+        let untappd_rating = document.createElement("div");
+        let user_rating = document.createElement("div");
+        let logo = document.createElement("img");
+        let logo_user = document.createElement("img");
+        let link = document.createElement("a");
+        let link_checkin = document.createElement("a");
+        let updated = document.createElement("p");
+        let wrong = document.createElement("a");
+        let triangle = document.createElement("div");
+        let checkmark = document.createElement("img");
 
         untappd.classList.add("untappd");
         wrong.classList.add("suggest");
@@ -71,7 +71,7 @@ function main() {
                     link.target = "_blank";
                     link.rel = "noopener noreferrer";
                     // Updated datetime
-                    var date = new Date(data.untpd_updated);
+                    let date = new Date(data.untpd_updated);
                     updated.innerText = "Oppdatert: " + date.toLocaleDateString('en-GB') + " " + date.toLocaleTimeString('en-GB');
                     // Link to suggest untappd match
                     wrong.innerText = "Feil øl?";

@@ -1,5 +1,4 @@
 var state = 0;
-var observe_state = 0;
 
 function createRatings(products, beer_info) {
     for (let i = 0; i < products.length; i++) {
@@ -7,17 +6,17 @@ function createRatings(products, beer_info) {
             let id = products[i].id.split("cartEntryCode")[1];
 
             // Construct HTML
-            var untappd = document.createElement("div");
-            var untappd_rating = document.createElement("div");
-            var user_rating = document.createElement("span");
-            var logo = document.createElement("img");
-            var logo_user = document.createElement("img");
-            var link = document.createElement("a");
-            var link_checkin = document.createElement("a");
-            var triangle = document.createElement("div");
-            var checkmark = document.createElement("img");
-            var star1 = document.createElement("img");
-            var star2 = document.createElement("img");
+            let untappd = document.createElement("div");
+            let untappd_rating = document.createElement("div");
+            let user_rating = document.createElement("span");
+            let logo = document.createElement("img");
+            let logo_user = document.createElement("img");
+            let link = document.createElement("a");
+            let link_checkin = document.createElement("a");
+            let triangle = document.createElement("div");
+            let checkmark = document.createElement("img");
+            let star1 = document.createElement("img");
+            let star2 = document.createElement("img");
 
             untappd.classList.add("untappd");
             triangle.classList.add("triangle-overview");
