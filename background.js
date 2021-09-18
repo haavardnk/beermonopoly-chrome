@@ -30,8 +30,8 @@ function create_auth_callback(untappd_code) {
 
 async function get_untappd_token(untappd_code) {
     let response = await fetch(create_auth_callback(untappd_code), {
-        method: 'GET', // *GET, POST, PUT, DELETE, etc.
-        mode: 'no-cors', // no-cors, *cors, same-origin
+        method: 'GET',
+        mode: 'no-cors',
         headers: {
             'User-Agent': 'chrome-extension:Beermonopoly'
         },
