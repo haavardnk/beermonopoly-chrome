@@ -2,6 +2,14 @@ const CLIENT_ID = encodeURIComponent('2439C553FA0E38D8C6A337335092D2C934890E82')
 const CLIENT_SECRET = encodeURIComponent('CBBA2DB04C6CC3D3309D27F3B9A8EEE75693DB92');
 const REDIRECT_URI = encodeURIComponent('https://' + chrome.runtime.id + '.chromiumapp.org/')
 
+chrome.runtime.onInstalled.addListener(function (details) {
+    if (details.reason === "install") {
+        chrome.tabs.create({
+            url: "https://beermonopoly.com/onboarding/"
+        });
+    };
+});
+
 chrome.storage.sync.get({ user_signed_in: false }, function (result) {
     if (result.user_signed_in == true) {
         chrome.action.setPopup({ popup: 'popup-signed-in.html' })
@@ -147,3 +155,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     };
 });
+
