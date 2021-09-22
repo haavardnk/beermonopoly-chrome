@@ -2,7 +2,7 @@ async function getBeer(beer_id, api_token) {
     // Check if authenticated
     if (api_token) {
         let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
-            + "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated,user_checked_in", {
+            + "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated,user_checked_in,badges", {
             headers: {
                 Authorization: `Token ${api_token}`
             }
@@ -11,7 +11,7 @@ async function getBeer(beer_id, api_token) {
         return data
     } else {
         let response = await fetch("https://api.beermonopoly.com/beers/" + beer_id
-            + "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated");
+            + "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated,badges");
         let data = await response.json();
         return data
     };
@@ -110,8 +110,21 @@ function main() {
                         triangle.appendChild(checkmark);
                         document.getElementsByClassName('product__details--top')[0].prepend(triangle);
                     }
-                }
-                else {
+
+                    // If beer has badges
+                    for (let i = 0; i < data.badges.length; i++) {
+                        let badges = document.createElement("div");
+                        let badge = document.createElement("span");
+
+                        badges.classList.add("badges")
+
+                        badge.innerText = data.badges[i].text
+
+                        badges.appendChild(badge)
+                        document.getElementsByClassName('product__layout-wrapper')[0].appendChild(badges);
+                    };
+
+                } else {
                     link.innerText = "Ingen match";
                     wrong.innerText = "Foreslå Untappd match";
                 }
