@@ -41,7 +41,6 @@ function createRatings(products, beer_info) {
             untappd_rating.appendChild(star1);
 
             products[i].getElementsByClassName('product-stock-status')[0].appendChild(untappd);
-
             if (beer_info[id].rating !== null) {
                 // Untappd rating
                 link.innerText = beer_info[id].rating.toPrecision(3);
@@ -150,14 +149,12 @@ document.arrive(".product-item__image", function () {
     if (observe_state == 0) {
         document.arrive(".facet-value--selected", function () {
             if (state == 0) {
-                [...document.getElementsByClassName("untappd")].map(n => n && n.remove());
                 state = 1;
                 setTimeout(main, 100);
             }
         });
         document.leave(".facet-value--selected", function () {
             if (state == 0) {
-                [...document.getElementsByClassName("untappd")].map(n => n && n.remove());
                 state = 1;
                 setTimeout(main, 100);
             }
