@@ -55,7 +55,6 @@ function createRatings(products, beer_info) {
                     products[i].getElementsByClassName("product__category-name")[0].textContent += " - " + beer_info[id].style.split("-")[1]
                 }
 
-
                 // If beer checked in by user
                 if (beer_info[id].hasOwnProperty('user_checked_in') && beer_info[id].user_checked_in.length > 0) {
                     // User rating
@@ -71,6 +70,20 @@ function createRatings(products, beer_info) {
                     triangle.appendChild(checkmark);
                     products[i].prepend(triangle);
                 };
+
+                // If beer has badges
+                for (let j = 0; j < beer_info[id].badges.length; j++) {
+                    let badges = document.createElement("div");
+                    let badge = document.createElement("span");
+
+                    badges.classList.add("badges");
+
+                    badge.innerText = beer_info[id].badges[j].text;
+
+                    badges.appendChild(badge);
+                    products[i].getElementsByClassName('product-stock-status')[0].appendChild(badges);
+                };
+
             } else {
                 link.innerText = "Ingen match";
             };
@@ -92,7 +105,7 @@ function getBeerIds(products) {
 async function getBeerInfo(beer_ids, api_token) {
     if (api_token) {
         let response = await fetch("https://api.beermonopoly.com/beers/?beers=" + beer_ids.join()
-            + "&fields=vmp_id,style,rating,untpd_url,user_checked_in", {
+            + "&fields=vmp_id,style,rating,untpd_url,user_checked_in,badges", {
             headers: {
                 Authorization: `Token ${api_token}`
             }
@@ -101,7 +114,7 @@ async function getBeerInfo(beer_ids, api_token) {
         return data;
     } else {
         let response = await fetch("https://api.beermonopoly.com/beers/?beers=" + beer_ids.join()
-            + "&fields=vmp_id,style,rating,untpd_url");
+            + "&fields=vmp_id,style,rating,untpd_url,badges");
         let data = await response.json();
         return data;
     };
