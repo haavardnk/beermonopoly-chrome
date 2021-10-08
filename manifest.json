@@ -56,6 +56,8 @@
                 "cart.js"
             ],
             "matches": [
+                "https://*.vinmonopolet.no/cart",
+                "https://*.vinmonopolet.no/cart/*",
                 "https://*.vinmonopolet.no/vmp/cart",
                 "https://*.vinmonopolet.no/vmp/cart/*"
             ],
