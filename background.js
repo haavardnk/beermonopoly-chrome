@@ -39,7 +39,6 @@ function create_auth_callback(untappd_code) {
 async function get_untappd_token(untappd_code) {
     let response = await fetch(create_auth_callback(untappd_code), {
         method: 'GET',
-        mode: 'no-cors',
         headers: {
             'User-Agent': 'chrome-extension:Beermonopoly'
         },
@@ -51,7 +50,7 @@ async function get_untappd_token(untappd_code) {
 async function get_untappd_username(untappd_token) {
     let response = await fetch(`https://api.untappd.com/v4/user/info/?access_token=${untappd_token}`, {
         headers: {
-            'User-Agent': 'chrome-extension:Beermonopoly'
+            'User-Agent': 'chrome-extension:Beermonopoly',
         },
     })
     return response.json()
