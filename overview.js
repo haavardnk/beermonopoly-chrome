@@ -137,6 +137,13 @@ function main() {
 
 }
 
+function resultsChanged() {
+    if (state == 0) {
+        state = 1;
+        setTimeout(main, 100);
+    }
+};
+
 // Wait for Vinmonopolet to load beers
 document.arrive(".product-item__image", function () {
     let untappd = document.getElementsByClassName("untappd");
@@ -147,18 +154,9 @@ document.arrive(".product-item__image", function () {
 
     // Add observers of facet changes
     if (observe_state == 0) {
-        document.arrive(".facet-value--selected", function () {
-            if (state == 0) {
-                state = 1;
-                setTimeout(main, 100);
-            }
-        });
-        document.leave(".facet-value--selected", function () {
-            if (state == 0) {
-                state = 1;
-                setTimeout(main, 100);
-            }
-        });
+        document.arrive(".facet-value--selected", resultsChanged);
+        document.leave(".facet-value--selected", resultsChanged);
+        document.leave(".search-results__sort__list", resultsChanged);
         observe_state = 1;
     }
 });
