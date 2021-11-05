@@ -41,7 +41,7 @@ function createRatings(products, beer_info) {
             untappd_rating.appendChild(star1);
 
             products[i].getElementsByClassName('product-stock-status')[0].appendChild(untappd);
-            if (beer_info[id].rating !== null) {
+            if (beer_info[id] !== undefined && beer_info[id].rating !== undefined) {
                 // Untappd rating
                 link.innerText = beer_info[id].rating.toPrecision(3);
                 link.href = beer_info[id].untpd_url;
@@ -137,11 +137,23 @@ function main() {
 
 }
 
+// Load beer info again on change
 function resultsChanged() {
     if (state == 0) {
         state = 1;
+        // Run main update
         setTimeout(main, 100);
-    }
+        // Run again if main update fails (VMP using long time to load beers)
+        setTimeout(function () {
+            products = document.getElementsByClassName("product__category-name")
+            for (let i = 0; i < products.length; i++) {
+                if (categories.includes(products[i].innerText)) {
+                    main();
+                    break;
+                };
+            };
+        }, 1000);
+    };
 };
 
 // Wait for Vinmonopolet to load beers
