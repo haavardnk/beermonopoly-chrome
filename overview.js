@@ -41,7 +41,7 @@ function createRatings(products, beer_info) {
             untappd_rating.appendChild(star1);
 
             products[i].getElementsByClassName('product-stock-status')[0].appendChild(untappd);
-            if (beer_info[id] !== undefined && beer_info[id].rating !== undefined) {
+            if (beer_info[id] !== undefined && beer_info[id].rating !== null) {
                 // Untappd rating
                 link.innerText = beer_info[id].rating.toPrecision(3);
                 link.href = beer_info[id].untpd_url;

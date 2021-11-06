@@ -63,7 +63,8 @@ function main() {
         // Get beer info
         chrome.storage.sync.get({ api_token: null }, async function (result) {
             getBeer(beer_id, result.api_token).then(function (data) {
-                if (data.rating !== null) {
+                console.log(data)
+                if (data !== undefined && data.rating !== undefined && data.rating !== null) {
                     // Untappd rating
                     untappd_rating.insertBefore(ratingToStars(data.rating.toPrecision(3)), untappd_rating.childNodes[1])
                     link.href = data.untpd_url;
@@ -123,7 +124,8 @@ function main() {
                         badges.appendChild(badge)
                         document.getElementsByClassName('product__layout-wrapper')[0].appendChild(badges);
                     };
-
+                } else if (data.detail !== undefined && data.detail == "Not found.") {
+                    link.innerText = "Ny, oppdateres ved neste kjøring";
                 } else {
                     link.innerText = "Ingen match";
                     wrong.innerText = "Foreslå Untappd match";
