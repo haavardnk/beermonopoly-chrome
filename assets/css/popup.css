@@ -1,46 +1,46 @@
 body {
-    width: 300px;
-    height: auto;
+  width: 300px;
+  height: auto;
 }
 
 div {
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 50%;
-    height: 25%;
-    padding: 5px;
-    font-size: 2em;
-    background-color: #FFB000;
-    border-radius: 5px;
-    text-align: center;
-    color: white;
-    font-family: ProximaNova, Helvetica, sans-serif;
-    font-weight: bold;
-    margin-bottom: 15px;
-    cursor: pointer;
-    transition-duration: 0.3s;
+  position: relative;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 50%;
+  height: 25%;
+  padding: 5px;
+  font-size: 2em;
+  background-color: #ffb000;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+  font-family: ProximaNova, Helvetica, sans-serif;
+  font-weight: bold;
+  margin-bottom: 15px;
+  cursor: pointer;
+  transition-duration: 0.3s;
 }
 
 div:hover {
-    background-color: black;
-    transform: translateX(-50%) scale(1.1);
+  background-color: black;
+  transform: translateX(-50%) scale(1.1);
 }
 
 .powered {
-    height: 20px;
-    position: absolute;
-    bottom:14px;
-    right:10px;
+  height: 20px;
+  position: absolute;
+  bottom: 14px;
+  right: 10px;
 }
 
 h1 {
-    font-size: 1.75em;
+  font-size: 1.75em;
 }
 
 .kofi {
-    float: left;
-    border:0px;
-    height:25px;
-    margin-bottom: 10px;
+  float: left;
+  border: 0;
+  height: 25px;
+  margin-bottom: 10px;
 }
