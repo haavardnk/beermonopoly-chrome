@@ -1,5 +1,3 @@
-const CLIENT_ID = encodeURIComponent('2439C553FA0E38D8C6A337335092D2C934890E82');
-const CLIENT_SECRET = encodeURIComponent('CBBA2DB04C6CC3D3309D27F3B9A8EEE75693DB92');
 const REDIRECT_URI = encodeURIComponent('https://' + chrome.runtime.id + '.chromiumapp.org/')
 
 chrome.runtime.onInstalled.addListener(function (details) {
@@ -24,20 +22,14 @@ function is_user_signed_in() {
     });
 }
 
-function create_auth_endpoint() {
-    let oauth_endpoint =
-        `https://untappd.com/oauth/authenticate/?client_id=${CLIENT_ID}&response_type=code&redirect_url=${REDIRECT_URI}`;
-    return oauth_endpoint;
+async function get_api_client_info() {
+    let response = await fetch('https://api.beermonopoly.com/chrome/untappd/')
+    let data = response.json();
+    return data;
 }
 
-function create_auth_callback(untappd_code) {
-    let oauth_callback =
-        `https://untappd.com/oauth/authorize/?client_id=${CLIENT_ID}&client_secret=${CLIENT_SECRET}&response_type=code&redirect_url=${REDIRECT_URI}&code=${untappd_code}`;
-    return oauth_callback;
-}
-
-async function get_untappd_token(untappd_code) {
-    let response = await fetch(create_auth_callback(untappd_code), {
+async function get_untappd_token(client_id, client_secret, untappd_code) {
+    let response = await fetch(`https://untappd.com/oauth/authorize/?client_id=${client_id}&client_secret=${client_secret}&response_type=code&redirect_url=${REDIRECT_URI}&code=${untappd_code}`, {
         method: 'GET',
         headers: {
             'User-Agent': 'chrome-extension:Beermonopoly'
@@ -71,65 +63,69 @@ async function api_auth(untappd_code, untappd_token) {
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.message === 'login') {
-        chrome.identity.launchWebAuthFlow({
-            'url': create_auth_endpoint(),
-            'interactive': true
-        }, function (redirect_url) {
-            if (chrome.runtime.lastError) {
-                // problem signing in
-            } else {
-                // untappd redirect recieved
-                let untappd_code = redirect_url.substring(redirect_url.indexOf('code=') + 5);
+        // get api credentials
+        get_api_client_info().then(function (untappd_client) {
+            chrome.identity.launchWebAuthFlow({
+                'url': `https://untappd.com/oauth/authenticate/?client_id=${untappd_client.api_client_id}&response_type=code&redirect_url=${REDIRECT_URI}`,
+                'interactive': true
+            }, function (redirect_url) {
+                if (chrome.runtime.lastError) {
+                    // problem signing in
+                } else {
+                    // untappd redirect recieved
+                    let untappd_code = redirect_url.substring(redirect_url.indexOf('code=') + 5);
 
-                get_untappd_token(untappd_code).then(function (data) {
-                    if (data.meta.http_code == 200) {
-                        // untappd code returned and access token received
-                        let untappd_token = data.response.access_token;
+                    get_untappd_token(untappd_client.api_client_id, untappd_client.api_client_secret, untappd_code).then(function (data) {
+                        if (data.meta.http_code == 200) {
+                            // untappd code returned and access token received
+                            let untappd_token = data.response.access_token;
 
-                        api_auth(untappd_code, untappd_token).then(function (data) {
-                            // sign in to API success, save tokens in storage
-                            if (data.key) {
-                                let api_token = data.key;
+                            api_auth(untappd_code, untappd_token).then(function (data) {
+                                // sign in to API success, save tokens in storage
+                                if (data.key) {
+                                    let api_token = data.key;
 
-                                // store information in storage
-                                chrome.storage.sync.set({ api_token: api_token }, function () {
-                                    console.log('API Token is saved in sync storage');
-                                });
-                                chrome.storage.sync.set({ untappd_token: untappd_token }, function () {
-                                    console.log('Untappd Token is saved in sync storage');
-                                });
-                                chrome.storage.sync.set({ untappd_code: untappd_code }, function () {
-                                    console.log('Untappd Code is saved in sync storage');
-                                });
-                                get_untappd_username(untappd_token).then(function (data) {
-                                    let username = data.response.user.user_name;
-                                    chrome.storage.sync.set({ username: username }, function () {
-                                        console.log('Username is set to ' + username);
+                                    // store information in storage
+                                    chrome.storage.sync.set({ api_token: api_token }, function () {
+                                        console.log('API Token is saved in sync storage');
                                     });
-                                });
-                                chrome.storage.sync.set({ user_signed_in: true }, function () {
-                                    console.log('User successfully signed in');
-                                });
+                                    chrome.storage.sync.set({ untappd_token: untappd_token }, function () {
+                                        console.log('Untappd Token is saved in sync storage');
+                                    });
+                                    chrome.storage.sync.set({ untappd_code: untappd_code }, function () {
+                                        console.log('Untappd Code is saved in sync storage');
+                                    });
+                                    get_untappd_username(untappd_token).then(function (data) {
+                                        let username = data.response.user.user_name;
+                                        chrome.storage.sync.set({ username: username }, function () {
+                                            console.log('Username is set to ' + username);
+                                        });
+                                    });
+                                    chrome.storage.sync.set({ user_signed_in: true }, function () {
+                                        console.log('User successfully signed in');
+                                    });
 
-                                chrome.action.setPopup({ popup: 'popup-signed-in.html' }, () => {
-                                    sendResponse('success');
-                                });
+                                    chrome.action.setPopup({ popup: 'popup-signed-in.html' }, () => {
+                                        sendResponse('success');
+                                    });
 
-                            } else {
-                                // problem with API auth
-                                console.log("API authorization failed.");
-                            };
+                                } else {
+                                    // problem with API auth
+                                    console.log("API authorization failed.");
+                                };
 
-                        });
+                            });
 
-                    } else {
-                        // invalid credentials
-                        console.log("Untappd authorization failed.");
+                        } else {
+                            // invalid credentials
+                            console.log("Untappd authorization failed.");
 
-                    };
-                });
-            };
+                        };
+                    });
+                };
+            });
         });
+
 
         return true;
 
@@ -154,4 +150,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         return true;
     };
 });
-
