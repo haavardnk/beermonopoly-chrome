@@ -1,5 +1,7 @@
 # Beermonopoly Chrome Extension
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/ff0ebad6bed34928930abeff3493d62a)](https://www.codacy.com/gh/haavardnk/beermonopoly-chrome/dashboard?utm_source=github.com&utm_medium=referral&utm_content=haavardnk/beermonopoly-chrome&utm_campaign=Badge_Grade)
+
 ## Introduction
 
 ![Beermonopoly Logo](https://i.imgur.com/MHce8RD.png)
