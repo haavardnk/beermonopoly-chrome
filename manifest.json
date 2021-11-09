@@ -9,7 +9,7 @@
     "128": "assets/img/icon128.png"
   },
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "src/background/background.js"
   },
   "content_scripts": [
     {
@@ -19,7 +19,7 @@
         "assets/js/sweetalert2.all.min.js",
         "assets/js/functions.js",
         "assets/js/sentry.min.js",
-        "details.js"
+        "src/content/details.js"
       ],
       "matches": ["https://*.vinmonopolet.no/*/*/*/p/*"],
       "run_at": "document_end"
@@ -30,7 +30,7 @@
         "assets/js/arrive.min.js",
         "assets/js/functions.js",
         "assets/js/sentry.min.js",
-        "overview.js"
+        "src/content/overview.js"
       ],
       "matches": [
         "https://*.vinmonopolet.no/search/?q=*",
@@ -45,7 +45,7 @@
         "assets/js/arrive.min.js",
         "assets/js/functions.js",
         "assets/js/sentry.min.js",
-        "cart.js"
+        "src/content/cart.js"
       ],
       "matches": [
         "https://*.vinmonopolet.no/cart",
@@ -61,7 +61,7 @@
         "assets/js/arrive.min.js",
         "assets/js/functions.js",
         "assets/js/sentry.min.js",
-        "wishlist.js"
+        "src/content/wishlist.js"
       ],
       "matches": ["https://*.vinmonopolet.no/wishlist/*"],
       "run_at": "document_end"
@@ -81,7 +81,7 @@
     }
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "src/popup/popup.html"
   },
   "permissions": ["identity", "storage"],
   "host_permissions": [

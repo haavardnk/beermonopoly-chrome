@@ -17,11 +17,11 @@ chrome.storage.sync.get(
   function (result) {
     if (result.user_signed_in === true) {
       chrome.action.setPopup({
-        popup: "popup-signed-in.html",
+        popup: "src/popup/popup-signed-in.html",
       });
     } else {
       chrome.action.setPopup({
-        popup: "popup.html",
+        popup: "src/popup/popup.html",
       });
     }
   }
@@ -168,7 +168,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
                     chrome.action.setPopup(
                       {
-                        popup: "popup-signed-in.html",
+                        popup: "src/popup/popup-signed-in.html",
                       },
                       () => {
                         sendResponse("success");
@@ -209,7 +209,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         });
         chrome.action.setPopup(
           {
-            popup: "popup.html",
+            popup: "src/popup/popup.html",
           },
           () => {
             sendResponse("success");
