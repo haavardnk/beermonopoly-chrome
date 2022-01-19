@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Beermonopoly",
-  "version": "0.2.8",
+  "version": "0.2.9",
   "description": "Add Untappd information to Vinmonopolet",
   "icons": {
     "16": "assets/img/icon16.png",
@@ -86,6 +86,7 @@
   "permissions": ["identity", "storage"],
   "host_permissions": [
     "https://untappd.com/oauth/authorize/*",
+    "https://auth.beermonopoly.com/connect/untappd/*",
     "https://api.beermonopoly.com/auth/*"
   ]
 }
