@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Beermonopoly",
-  "version": "0.2.9",
-  "description": "Add Untappd information to Vinmonopolet",
+  "name": "Ølmonopolet",
+  "version": "0.2.10",
+  "description": "Legger til Untappd informasjon på Vinmonopolet.no",
   "icons": {
     "16": "assets/img/icon16.png",
     "48": "assets/img/icon48.png",
