@@ -84,6 +84,21 @@ function createRatings(products, beer_info) {
         }
       } else {
         link.innerText = "Ingen match";
+
+        // If beer has badges
+        for (let j = 0; j < beer_info[id].badges.length; j++) {
+          let badges = document.createElement("div");
+          let badge = document.createElement("span");
+
+          badges.classList.add("badges");
+
+          badge.innerText = beer_info[id].badges[j].text;
+
+          badges.appendChild(badge);
+          products[i]
+            .getElementsByClassName("product-item__info-container")[0]
+            .appendChild(badges);
+        }
       }
     }
   }

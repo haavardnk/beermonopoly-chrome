@@ -89,21 +89,40 @@ function createRatings(products, beer_info) {
         }
 
         // If beer has badges
-        for (let j = 0; j < beer_info[id].badges.length; j++) {
-          let badges = document.createElement("div");
-          let badge = document.createElement("span");
+        if (beer_info[id] !== undefined) {
+          for (let j = 0; j < beer_info[id].badges.length; j++) {
+            let badges = document.createElement("div");
+            let badge = document.createElement("span");
 
-          badges.classList.add("badges");
+            badges.classList.add("badges");
 
-          badge.innerText = beer_info[id].badges[j].text;
+            badge.innerText = beer_info[id].badges[j].text;
 
-          badges.appendChild(badge);
-          products[i]
-            .getElementsByClassName("product-stock-status")[0]
-            .appendChild(badges);
+            badges.appendChild(badge);
+            products[i]
+              .getElementsByClassName("product-stock-status")[0]
+              .appendChild(badges);
+          }
         }
       } else {
         link.innerText = "Ingen match";
+
+        // If beer has badges
+        if (beer_info[id] !== undefined) {
+          for (let j = 0; j < beer_info[id].badges.length; j++) {
+            let badges = document.createElement("div");
+            let badge = document.createElement("span");
+
+            badges.classList.add("badges");
+
+            badge.innerText = beer_info[id].badges[j].text;
+
+            badges.appendChild(badge);
+            products[i]
+              .getElementsByClassName("product-stock-status")[0]
+              .appendChild(badges);
+          }
+        }
       }
     }
   }

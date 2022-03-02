@@ -181,18 +181,20 @@ function main() {
             }
 
             // If beer has badges
-            for (let i = 0; i < data.badges.length; i++) {
-              let badges = document.createElement("div");
-              let badge = document.createElement("span");
+            if (data !== undefined) {
+              for (let i = 0; i < data.badges.length; i++) {
+                let badges = document.createElement("div");
+                let badge = document.createElement("span");
 
-              badges.classList.add("badges");
+                badges.classList.add("badges");
 
-              badge.innerText = data.badges[i].text;
+                badge.innerText = data.badges[i].text;
 
-              badges.appendChild(badge);
-              document
-                .getElementsByClassName("product__layout-wrapper")[0]
-                .appendChild(badges);
+                badges.appendChild(badge);
+                document
+                  .getElementsByClassName("product__layout-wrapper")[0]
+                  .appendChild(badges);
+              }
             }
           } else if (
             data.detail !== undefined &&
@@ -202,6 +204,23 @@ function main() {
           } else {
             link.innerText = "Ingen match";
             wrong.innerText = "Foreslå Untappd match";
+
+            // If beer has badges
+            if (data !== undefined) {
+              for (let i = 0; i < data.badges.length; i++) {
+                let badges = document.createElement("div");
+                let badge = document.createElement("span");
+
+                badges.classList.add("badges");
+
+                badge.innerText = data.badges[i].text;
+
+                badges.appendChild(badge);
+                document
+                  .getElementsByClassName("product__layout-wrapper")[0]
+                  .appendChild(badges);
+              }
+            }
           }
         });
       }

@@ -43,10 +43,10 @@ function createRatings(products, beer_info) {
       untappd_rating.appendChild(link);
       untappd_rating.appendChild(star1);
 
+      products[i]
+        .getElementsByClassName("product-item__info-container")[0]
+        .appendChild(untappd);
       if (beer_info[id] && beer_info[id].rating !== null) {
-        products[i]
-          .getElementsByClassName("product-item__info-container")[0]
-          .appendChild(untappd);
         // Untappd rating
         link.innerText = beer_info[id].rating.toPrecision(3);
         link.href = beer_info[id].untpd_url;
@@ -100,6 +100,24 @@ function createRatings(products, beer_info) {
           products[i]
             .getElementsByClassName("product-item__info-container")[0]
             .appendChild(badges);
+        }
+      } else {
+        link.innerText = "Ingen match";
+        if (beer_info[id] !== undefined) {
+          // If beer has badges
+          for (let j = 0; j < beer_info[id].badges.length; j++) {
+            let badges = document.createElement("div");
+            let badge = document.createElement("span");
+
+            badges.classList.add("badges");
+
+            badge.innerText = beer_info[id].badges[j].text;
+
+            badges.appendChild(badge);
+            products[i]
+              .getElementsByClassName("product-item__info-container")[0]
+              .appendChild(badges);
+          }
         }
       }
     }
