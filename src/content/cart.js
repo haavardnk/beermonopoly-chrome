@@ -58,7 +58,7 @@ function createRatings(products, beer_info) {
           user_rating.appendChild(logo_user);
           user_rating.appendChild(link_checkin);
           user_rating.appendChild(star2);
-          link_checkin.href = beer_info[id].user_checked_in[0].checkin_url;
+          link_checkin.href = beer_info[id].untpd_url + "?filter=you";
           link_checkin.innerText =
             beer_info[id].user_checked_in[0].rating.toPrecision(3);
           link_checkin.target = "_blank";

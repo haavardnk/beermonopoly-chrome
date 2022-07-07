@@ -83,7 +83,6 @@ function main() {
       },
       async function (result) {
         getBeer(beer_id, result.api_token).then(function (data) {
-          console.log(data);
           if (
             data !== undefined &&
             data.rating !== undefined &&
@@ -165,12 +164,15 @@ function main() {
               untappd.insertBefore(user_rating, untappd.childNodes[1]);
               user_rating.appendChild(logo_user);
               user_rating.appendChild(
-                ratingToStars(data.user_checked_in[0].rating.toPrecision(3))
+                ratingToStars(data.user_checked_in[0].rating.toPrecision(3)) 
               );
               user_rating.appendChild(link_checkin);
-              link_checkin.href = data.user_checked_in[0].checkin_url;
+              link_checkin.href = data.untpd_url + "?filter=you";
               link_checkin.innerText =
-                data.user_checked_in[0].rating.toPrecision(3);
+                data.user_checked_in[0].rating.toPrecision(3) +
+                " (" +
+                kFormatter(data.user_checked_in[0].count) +
+                ")";
               link_checkin.target = "_blank";
               link_checkin.rel = "noopener noreferrer";
               // Checked in triangle
