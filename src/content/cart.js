@@ -37,7 +37,7 @@ function createRatings(products, beer_info) {
       untappd_rating.appendChild(star1);
 
       products[i]
-        .getElementsByClassName("product-item__info-container")[0]
+        .getElementsByClassName("info-container")[0]
         .appendChild(untappd);
 
       if (beer_info[id].rating !== null) {
@@ -79,7 +79,7 @@ function createRatings(products, beer_info) {
 
           badges.appendChild(badge);
           products[i]
-            .getElementsByClassName("product-item__info-container")[0]
+            .getElementsByClassName("info-container")[0]
             .appendChild(badges);
         }
       } else {
@@ -96,7 +96,7 @@ function createRatings(products, beer_info) {
 
           badges.appendChild(badge);
           products[i]
-            .getElementsByClassName("product-item__info-container")[0]
+            .getElementsByClassName("info-container")[0]
             .appendChild(badges);
         }
       }

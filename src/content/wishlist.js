@@ -44,7 +44,7 @@ function createRatings(products, beer_info) {
       untappd_rating.appendChild(star1);
 
       products[i]
-        .getElementsByClassName("product-item__info-container")[0]
+        .getElementsByClassName("info-container")[0]
         .appendChild(untappd);
       if (beer_info[id] && beer_info[id].rating !== null) {
         // Untappd rating
@@ -98,7 +98,7 @@ function createRatings(products, beer_info) {
 
           badges.appendChild(badge);
           products[i]
-            .getElementsByClassName("product-item__info-container")[0]
+            .getElementsByClassName("info-container")[0]
             .appendChild(badges);
         }
       } else {
@@ -115,7 +115,7 @@ function createRatings(products, beer_info) {
 
             badges.appendChild(badge);
             products[i]
-              .getElementsByClassName("product-item__info-container")[0]
+              .getElementsByClassName("info-container")[0]
               .appendChild(badges);
           }
         }
@@ -191,7 +191,7 @@ function main() {
 }
 
 // Wait for Vinmonopolet to load beers
-document.arrive(".product-item__image", function () {
+document.arrive(".product__image-container", function () {
   let untappd = document.getElementsByClassName("untappd");
   if (untappd.length === 0 && state === 0) {
     state = 1;

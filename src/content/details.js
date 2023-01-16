@@ -121,7 +121,8 @@ function main() {
                 .getElementsByTagName("li")[0]
                 .cloneNode((deep = true));
               ibu.firstChild.data = "Ibu";
-              ibu.getElementsByTagName("span")[0].textContent = data.ibu;
+              console.log(ibu);
+              ibu.getElementsByClassName("product__contents-list__content-percentage")[0].innerText = data.ibu;
               document
                 .getElementsByClassName("product__contents-list")[0]
                 .insertBefore(

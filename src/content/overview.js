@@ -214,7 +214,7 @@ function resultsChanged() {
 }
 
 // Wait for Vinmonopolet to load beers
-document.arrive(".product-item__image", function () {
+document.arrive(".product__image-container", function () {
   let untappd = document.getElementsByClassName("untappd");
   if (untappd.length === 0 && state === 0) {
     state = 1;
