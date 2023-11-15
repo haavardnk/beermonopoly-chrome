@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ølmonopolet",
-  "version": "0.2.13",
+  "version": "0.2.14",
   "description": "Legger til Untappd informasjon på Vinmonopolet.no",
   "icons": {
     "16": "assets/img/icon16.png",
@@ -35,7 +35,8 @@
       "matches": [
         "https://*.vinmonopolet.no/search/?q=*",
         "https://*.vinmonopolet.no/search?q=*",
-        "https://*.vinmonopolet.no/vmp/search/?q=*"
+        "https://*.vinmonopolet.no/vmp/search/?q=*",
+        "https://*.vinmonopolet.no/search?*"
       ],
       "run_at": "document_end"
     },
