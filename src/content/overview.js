@@ -85,7 +85,10 @@ function createRatings(products, beer_info) {
           link_checkin.rel = "noopener noreferrer";
           // Checked in triangle
           triangle.appendChild(checkmark);
-          products[i].prepend(triangle);
+          products[i].insertBefore(
+            triangle,
+            products[i].getElementsByClassName("sr-only")[0]
+          );
         }
 
         // If beer has badges
@@ -229,6 +232,7 @@ document.arrive(".product__image-container", function () {
     observe_state = 1;
   }
 });
+console.log("test");
 
 // Sentry error logging
 Sentry.init({
