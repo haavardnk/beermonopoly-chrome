@@ -116,20 +116,34 @@ function main() {
                 .getElementsByClassName("product__category-name")[0]
                 .innerText.includes("ØL")
             ) {
-              ibu = document
-                .getElementsByClassName("product__contents-list")[0]
+              ibu_holder = document
+                .getElementsByClassName("product__properties-wrapper")[0]
+                .getElementsByClassName("product__properties-block");
+              ibu_holder = ibu_holder[ibu_holder.length - 1];
+
+              ibu = ibu_holder
+                .getElementsByTagName("ul")[0]
                 .getElementsByTagName("li")[0]
                 .cloneNode((deep = true));
-              ibu.firstChild.data = "Ibu";
+              ibu.getElementsByTagName("strong")[0].innerText = "Ibu";
+              ibu.getElementsByTagName("span")[0].innerText = data.ibu;
               console.log(ibu);
-              ibu.getElementsByClassName("product__contents-list__content-percentage")[0].innerText = data.ibu;
-              document
-                .getElementsByClassName("product__contents-list")[0]
-                .insertBefore(
-                  ibu,
-                  document.getElementsByClassName("product__contents-list")[0]
-                    .childNodes[1]
-                );
+
+              ibu_holder.getElementsByTagName("ul")[0].appendChild(ibu);
+              // ibu = document
+              //   .getElementsByClassName("product__contents-list")[0]
+              //   .getElementsByTagName("li")[0]
+              //   .cloneNode((deep = true));
+              // ibu.firstChild.data = "Ibu";
+              // console.log(ibu);
+              // ibu.getElementsByClassName("product__contents-list__content-percentage")[0].innerText = data.ibu;
+              // document
+              //   .getElementsByClassName("product__contents-list")[0]
+              //   .insertBefore(
+              //     ibu,
+              //     document.getElementsByClassName("product__contents-list")[0]
+              //       .childNodes[1]
+              //   );
             }
             // Untappd style
             if (
@@ -165,7 +179,7 @@ function main() {
               untappd.insertBefore(user_rating, untappd.childNodes[1]);
               user_rating.appendChild(logo_user);
               user_rating.appendChild(
-                ratingToStars(data.user_checked_in[0].rating.toPrecision(3)) 
+                ratingToStars(data.user_checked_in[0].rating.toPrecision(3))
               );
               user_rating.appendChild(link_checkin);
               link_checkin.href = data.untpd_url + "?filter=you";

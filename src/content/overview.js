@@ -14,6 +14,7 @@ function createRatings(products, beer_info) {
       let id = products[i].getElementsByClassName("product__code")[0].innerText;
 
       // Construct HTML
+      let olmonopolet = document.createElement("div");
       let untappd = document.createElement("div");
       let untappd_rating = document.createElement("div");
       let user_rating = document.createElement("span");
@@ -39,14 +40,15 @@ function createRatings(products, beer_info) {
       star1.src = chrome.runtime.getURL("assets/img/star-solid.svg");
       star2.src = chrome.runtime.getURL("assets/img/star-solid.svg");
 
+      olmonopolet.appendChild(untappd);
       untappd.appendChild(untappd_rating);
       untappd_rating.appendChild(logo);
       untappd_rating.appendChild(link);
       untappd_rating.appendChild(star1);
 
       products[i]
-        .getElementsByClassName("product-stock-status")[0]
-        .appendChild(untappd);
+        .getElementsByClassName("product-item__bottom-container")[0]
+        .appendChild(olmonopolet);
       if (beer_info[id] !== undefined && beer_info[id].rating !== null) {
         // Untappd rating
         link.innerText = beer_info[id].rating.toPrecision(3);
@@ -93,8 +95,8 @@ function createRatings(products, beer_info) {
 
         // If beer has badges
         if (beer_info[id] !== undefined) {
+          let badges = document.createElement("div");
           for (let j = 0; j < beer_info[id].badges.length; j++) {
-            let badges = document.createElement("div");
             let badge = document.createElement("span");
 
             badges.classList.add("badges");
@@ -102,9 +104,7 @@ function createRatings(products, beer_info) {
             badge.innerText = beer_info[id].badges[j].text;
 
             badges.appendChild(badge);
-            products[i]
-              .getElementsByClassName("product-stock-status")[0]
-              .appendChild(badges);
+            olmonopolet.appendChild(badges);
           }
         }
       } else {
@@ -121,9 +121,7 @@ function createRatings(products, beer_info) {
             badge.innerText = beer_info[id].badges[j].text;
 
             badges.appendChild(badge);
-            products[i]
-              .getElementsByClassName("product-stock-status")[0]
-              .appendChild(badges);
+            olmonopolet.appendChild(badges);
           }
         }
       }
