@@ -116,20 +116,21 @@ function main() {
                 .getElementsByClassName("product__category-name")[0]
                 .innerText.includes("ØL")
             ) {
-              ibu_holder = document
-                .getElementsByClassName("product__properties-wrapper")[0]
-                .getElementsByClassName("product__properties-block");
-              ibu_holder = ibu_holder[ibu_holder.length - 1];
+              ibu_class = document.querySelectorAll(
+                '[ class^="properties-list" ]'
+              );
 
+              ibu_holder = ibu_class[ibu_class.length - 1];
+              console.log(ibu_holder);
               ibu = ibu_holder
-                .getElementsByTagName("ul")[0]
                 .getElementsByTagName("li")[0]
                 .cloneNode((deep = true));
               ibu.getElementsByTagName("strong")[0].innerText = "Ibu";
               ibu.getElementsByTagName("span")[0].innerText = data.ibu;
+              ibu.getElementsByTagName("span")[0].ariaLabel = data.ibu;
               console.log(ibu);
 
-              ibu_holder.getElementsByTagName("ul")[0].appendChild(ibu);
+              ibu_holder.appendChild(ibu);
               // ibu = document
               //   .getElementsByClassName("product__contents-list")[0]
               //   .getElementsByTagName("li")[0]
@@ -301,11 +302,7 @@ function main() {
   }
 }
 
-// Wait for Vinmonopolet to load beer
-document.arrive(".product__price", function () {
-  main();
-  Arrive.unbindAllArrive();
-});
+main();
 
 // Sentry error logging
 Sentry.init({

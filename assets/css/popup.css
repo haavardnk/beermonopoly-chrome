@@ -27,20 +27,20 @@ div:hover {
   transform: translateX(-50%) scale(1.1);
 }
 
-.powered {
-  height: 20px;
-  position: absolute;
-  bottom: 14px;
-  right: 10px;
+.patreon {
+  height: 50px;
+  float: left;
+  border: 0;
+  margin-bottom: 10px;
+}
+.facebook {
+  height: 48px;
+  float: left;
+  border: 0;
+  margin-top: 1px;
+  margin-bottom: 10px;
 }
 
 h1 {
   font-size: 1.75em;
-}
-
-.kofi {
-  float: left;
-  border: 0;
-  height: 25px;
-  margin-bottom: 10px;
 }

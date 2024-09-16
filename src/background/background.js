@@ -2,13 +2,13 @@ const REDIRECT_URI = encodeURIComponent(
   "https://" + chrome.runtime.id + ".chromiumapp.org/"
 );
 
-chrome.runtime.onInstalled.addListener(function (details) {
-  if (details.reason === "install") {
-    chrome.tabs.create({
-      url: "https://beermonopoly.com/onboarding/",
-    });
-  }
-});
+// chrome.runtime.onInstalled.addListener(function (details) {
+//   if (details.reason === "install") {
+//     chrome.tabs.create({
+//       url: "https://olmonopolet.app/onboarding/",
+//     });
+//   }
+// });
 
 chrome.storage.sync.get(
   {
@@ -72,8 +72,12 @@ function getParameterByName(name, url) {
   name = name.replace(/[\[\]]/g, "\\$&");
   var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
     results = regex.exec(url);
-  if (!results) { return null; }
-  if (!results[2]) { return ""; }
+  if (!results) {
+    return null;
+  }
+  if (!results[2]) {
+    return "";
+  }
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 

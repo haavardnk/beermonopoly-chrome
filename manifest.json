@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Ølmonopolet",
-  "version": "0.2.15",
+  "version": "0.2.19",
   "description": "Legger til Untappd informasjon på Vinmonopolet.no",
   "icons": {
     "16": "assets/img/icon16.png",
