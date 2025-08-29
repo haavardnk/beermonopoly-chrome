@@ -1,311 +1,222 @@
-async function getBeer(beer_id, api_token) {
-  // Check if authenticated
-  if (api_token) {
-    let response = await fetch(
-      "https://api.beermonopoly.com/beers/" +
-        beer_id +
-        "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated,user_checked_in,badges",
-      {
-        headers: {
-          Authorization: `Token ${api_token}`,
-        },
-      }
-    );
-    let data = await response.json();
-    return data;
-  } else {
-    let response = await fetch(
-      "https://api.beermonopoly.com/beers/" +
-        beer_id +
-        "/?fields=vmp_id,ibu,style,rating,checkins,untpd_url,untpd_updated,badges"
-    );
-    let data = await response.json();
-    return data;
+function getElement(className, index = 0) {
+  return document.getElementsByClassName(className)[index] || null;
+}
+
+function isProductSupported() {
+  const category = getElement("product__category-name");
+  return (
+    category && BEER_CATEGORIES.some((cat) => category.innerText.includes(cat))
+  );
+}
+
+function createUntappdElements() {
+  const elements = {};
+
+  elements.container = document.createElement("div");
+  elements.rating = document.createElement("div");
+  elements.link = document.createElement("a");
+  elements.updated = document.createElement("p");
+  elements.wrong = document.createElement("a");
+  elements.logo = document.createElement("img");
+
+  elements.container.classList.add("untappd");
+  elements.wrong.classList.add("suggest");
+  elements.logo.classList.add("logo-detail");
+
+  elements.logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
+  elements.link.target = "_blank";
+  elements.link.rel = "noopener noreferrer";
+
+  elements.rating.appendChild(elements.logo);
+  elements.rating.appendChild(elements.link);
+  elements.container.appendChild(elements.rating);
+  elements.container.appendChild(elements.updated);
+  elements.container.appendChild(elements.wrong);
+
+  return elements;
+}
+
+function injectIBU(data) {
+  const category = getElement("product__category-name");
+  if (
+    !category?.textContent.includes("ØL") &&
+    !category?.textContent.includes("Øl")
+  )
+    return;
+
+  const ibuContainers = document.querySelectorAll('[class^="properties-list"]');
+  if (ibuContainers.length === 0) return;
+
+  const ibuHolder = ibuContainers[ibuContainers.length - 1];
+
+  const listItems = Array.from(ibuHolder.getElementsByTagName("li"));
+  const hasIBU = listItems.some((item) => {
+    const strong = item.getElementsByTagName("strong")[0];
+    return strong?.innerText === "Ibu";
+  });
+
+  if (!hasIBU && listItems.length > 0) {
+    const ibuItem = listItems[0].cloneNode(true);
+    ibuItem.getElementsByTagName("strong")[0].innerText = "Ibu";
+    ibuItem.getElementsByTagName("span")[0].innerText = data.ibu || "N/A";
+    ibuItem.getElementsByTagName("span")[0].ariaLabel = data.ibu || "N/A";
+    ibuHolder.appendChild(ibuItem);
   }
 }
 
-function main() {
+function updateStyleInfo(data) {
+  const category = getElement("product__category-name");
+  const tabElement = getElement("product__tab-list")
+    ?.getElementsByTagName("li")[0]
+    ?.getElementsByTagName("span")[1];
+
+  if (!category || !tabElement || tabElement.textContent.includes("(")) return;
+
   if (
-    document
-      .getElementsByClassName("product__category-name")[0]
-      .innerText.includes("ØL") ||
-    document
-      .getElementsByClassName("product__category-name")[0]
-      .innerText.includes("SIDER") ||
-    document
-      .getElementsByClassName("product__category-name")[0]
-      .innerText.includes("MJØD")
+    category.textContent.includes("ØL") ||
+    category.textContent.includes("Øl")
   ) {
-    // Get beer id from DOM
-    let beer_id = document
-      .getElementsByClassName("product__tab-list")[0]
-      .getElementsByTagName("li")[1]
-      .getElementsByTagName("span")[1].innerText;
+    category.textContent = "Øl - " + data.style;
+  } else {
+    const stylePart = data.style.split("-")[1] || data.style;
+    if (category.textContent.includes(" - ")) {
+      const baseCategory = category.textContent.split(" - ")[0];
+      category.textContent = baseCategory + " - " + stylePart;
+    } else {
+      category.textContent += " - " + stylePart;
+    }
+  }
+  tabElement.textContent += " (" + data.style + ")";
+}
 
-    // Construct HTML
-    let untappd = document.createElement("div");
-    let untappd_rating = document.createElement("div");
-    let user_rating = document.createElement("div");
-    let logo = document.createElement("img");
-    let logo_user = document.createElement("img");
-    let link = document.createElement("a");
-    let link_checkin = document.createElement("a");
-    let updated = document.createElement("p");
-    let wrong = document.createElement("a");
-    let triangle = document.createElement("div");
-    let checkmark = document.createElement("img");
+function addBadges(data) {
+  if (!data?.badges?.length) return;
 
-    untappd.classList.add("untappd");
-    wrong.classList.add("suggest");
-    triangle.classList.add("triangle-detail");
-    user_rating.classList.add("user-rating-detail");
-    logo.classList.add("logo-detail");
-    logo_user.classList.add("logo-detail");
+  const layoutWrapper = getElement("product__layout-wrapper");
+  const existingBadges = layoutWrapper?.getElementsByClassName("badges");
 
-    logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
-    logo_user.src = chrome.runtime.getURL("assets/img/user.svg");
-    checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
+  if (!layoutWrapper || existingBadges?.length > 0) return;
 
-    untappd.appendChild(untappd_rating);
-    untappd_rating.appendChild(logo);
-    untappd_rating.appendChild(link);
-    untappd.appendChild(updated);
-    untappd.appendChild(wrong);
+  data.badges.forEach((badge) => {
+    const badgeDiv = document.createElement("div");
+    const badgeSpan = document.createElement("span");
+    badgeDiv.classList.add("badges");
+    badgeSpan.innerText = badge.text;
+    badgeDiv.appendChild(badgeSpan);
+    layoutWrapper.appendChild(badgeDiv);
+  });
+}
 
-    document
-      .getElementsByClassName("product__layout-wrapper")[0]
-      .appendChild(untappd);
-
-    // Get beer info
-    chrome.storage.sync.get(
-      {
-        api_token: null,
-      },
-      async function (result) {
-        getBeer(beer_id, result.api_token).then(function (data) {
-          if (
-            data !== undefined &&
-            data.rating !== undefined &&
-            data.rating !== null
-          ) {
-            // Untappd rating
-            untappd_rating.insertBefore(
-              ratingToStars(data.rating.toPrecision(3)),
-              untappd_rating.childNodes[1]
-            );
-            link.href = data.untpd_url;
-            link.innerText =
-              data.rating.toPrecision(3) +
-              " (" +
-              kFormatter(data.checkins) +
-              ")";
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            // Updated datetime
-            let date = new Date(data.untpd_updated);
-            updated.innerText =
-              "Oppdatert: " +
-              date.toLocaleDateString("en-GB") +
-              " " +
-              date.toLocaleTimeString("en-GB");
-            // Link to suggest untappd match
-            wrong.innerText = "Feil øl?";
-            // Untappd IBU for beers
-            if (
-              document
-                .getElementsByClassName("product__category-name")[0]
-                .innerText.includes("ØL")
-            ) {
-              ibu_class = document.querySelectorAll(
-                '[ class^="properties-list" ]'
-              );
-
-              ibu_holder = ibu_class[ibu_class.length - 1];
-              console.log(ibu_holder);
-              ibu = ibu_holder
-                .getElementsByTagName("li")[0]
-                .cloneNode((deep = true));
-              ibu.getElementsByTagName("strong")[0].innerText = "Ibu";
-              ibu.getElementsByTagName("span")[0].innerText = data.ibu;
-              ibu.getElementsByTagName("span")[0].ariaLabel = data.ibu;
-              console.log(ibu);
-
-              ibu_holder.appendChild(ibu);
-              // ibu = document
-              //   .getElementsByClassName("product__contents-list")[0]
-              //   .getElementsByTagName("li")[0]
-              //   .cloneNode((deep = true));
-              // ibu.firstChild.data = "Ibu";
-              // console.log(ibu);
-              // ibu.getElementsByClassName("product__contents-list__content-percentage")[0].innerText = data.ibu;
-              // document
-              //   .getElementsByClassName("product__contents-list")[0]
-              //   .insertBefore(
-              //     ibu,
-              //     document.getElementsByClassName("product__contents-list")[0]
-              //       .childNodes[1]
-              //   );
-            }
-            // Untappd style
-            if (
-              document
-                .getElementsByClassName("product__category-name")[0]
-                .innerText.includes("ØL")
-            ) {
-              document.getElementsByClassName(
-                "product__category-name"
-              )[0].textContent = "Øl - " + data.style;
-              document
-                .getElementsByClassName("product__tab-list")[0]
-                .getElementsByTagName("li")[0]
-                .getElementsByTagName("span")[1].textContent +=
-                " (" + data.style + ")";
-            } else {
-              document.getElementsByClassName(
-                "product__category-name"
-              )[0].textContent += " - " + data.style.split("-")[1];
-              document
-                .getElementsByClassName("product__tab-list")[0]
-                .getElementsByTagName("li")[0]
-                .getElementsByTagName("span")[1].textContent +=
-                " (" + data.style + ")";
-            }
-
-            // If beer checked in by user
-            if (
-              data.hasOwnProperty("user_checked_in") &&
-              data.user_checked_in.length > 0
-            ) {
-              // User rating
-              untappd.insertBefore(user_rating, untappd.childNodes[1]);
-              user_rating.appendChild(logo_user);
-              user_rating.appendChild(
-                ratingToStars(data.user_checked_in[0].rating.toPrecision(3))
-              );
-              user_rating.appendChild(link_checkin);
-              link_checkin.href = data.untpd_url + "?filter=you";
-              link_checkin.innerText =
-                data.user_checked_in[0].rating.toPrecision(3) +
-                " (" +
-                kFormatter(data.user_checked_in[0].count) +
-                ")";
-              link_checkin.target = "_blank";
-              link_checkin.rel = "noopener noreferrer";
-              // Checked in triangle
-              triangle.appendChild(checkmark);
-              document
-                .getElementsByClassName("product__details--top")[0]
-                .prepend(triangle);
-            }
-
-            // If beer has badges
-            if (data !== undefined) {
-              for (let i = 0; i < data.badges.length; i++) {
-                let badges = document.createElement("div");
-                let badge = document.createElement("span");
-
-                badges.classList.add("badges");
-
-                badge.innerText = data.badges[i].text;
-
-                badges.appendChild(badge);
-                document
-                  .getElementsByClassName("product__layout-wrapper")[0]
-                  .appendChild(badges);
-              }
-            }
-          } else if (
-            data.detail !== undefined &&
-            data.detail === "Not found."
-          ) {
-            link.innerText = "Ny, oppdateres ved neste kjøring";
-          } else {
-            link.innerText = "Ingen match";
-            wrong.innerText = "Foreslå Untappd match";
-
-            // If beer has badges
-            if (data !== undefined) {
-              for (let i = 0; i < data.badges.length; i++) {
-                let badges = document.createElement("div");
-                let badge = document.createElement("span");
-
-                badges.classList.add("badges");
-
-                badge.innerText = data.badges[i].text;
-
-                badges.appendChild(badge);
-                document
-                  .getElementsByClassName("product__layout-wrapper")[0]
-                  .appendChild(badges);
-              }
-            }
-          }
-        });
-      }
-    );
-
-    // Report wrong match modal
-    wrong.addEventListener("click", function (e) {
-      e.preventDefault();
-      Swal.fire({
-        title: "Rapporter feil Untappd match",
-        text: "Legg inn riktig Untappd link. Eksempel: https://untappd.com/b/nogne-o-porter/27638",
-        input: "text",
-        inputAttributes: {
-          autocapitalize: "off",
-        },
-        showCancelButton: false,
-        confirmButtonText: "Send",
-        confirmButtonColor: "#002025",
-      }).then((result) => {
-        if (result.isConfirmed && result.value) {
-          const data = JSON.stringify({
-            beer: beer_id,
-            suggested_url: result.value,
-          });
-          const xhr = new XMLHttpRequest();
-          const baseUrl = "https://api.beermonopoly.com/wrongmatch/";
-
-          xhr.open("POST", baseUrl, true);
-          xhr.setRequestHeader("Content-type", "application/json");
-          xhr.send(data);
-
-          xhr.onreadystatechange = function () {
-            // Call a function when the state changes
-            console.log(xhr.status);
-            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 201) {
-              Swal.fire({
-                title: "Feil registrert!",
-                text: "Ditt endringsforslag vil bli evaluert. Takk for hjelpen!",
-                icon: "success",
-                confirmButtonColor: "#002025",
-              });
-            } else {
-              Swal.fire({
-                title: "Det oppsto en feil ved sending av forslaget...",
-                text: "Sjekk at du har tastet inn en gyldig URL!",
-                icon: "error",
-                confirmButtonColor: "#002025",
-              });
-            }
-          };
-        } else if (result.isConfirmed && !result.value) {
+function setupWrongMatchHandler(wrongElement, beerId) {
+  wrongElement.addEventListener("click", (e) => {
+    e.preventDefault();
+    Swal.fire({
+      title: "Rapporter feil Untappd match",
+      text: "Legg inn riktig Untappd link. Eksempel: https://untappd.com/b/nogne-o-porter/27638",
+      input: "text",
+      inputAttributes: { autocapitalize: "off" },
+      showCancelButton: false,
+      confirmButtonText: "Send",
+      confirmButtonColor: "#002025",
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        fetch("https://api.olmonopolet.app/wrongmatch/", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ beer: beerId, suggested_url: result.value }),
+        }).then((response) => {
+          const success = response.status === 201;
           Swal.fire({
-            title: "Du må oppgi en gyldig Untappd link!",
-            text: "Eksempel: https://untappd.com/b/nogne-o-porter/27638",
-            icon: "error",
+            title: success
+              ? "Feil registrert!"
+              : "Det oppsto en feil ved sending av forslaget...",
+            text: success
+              ? "Ditt endringsforslag vil bli evaluert. Takk for hjelpen!"
+              : "Sjekk at du har tastet inn en gyldig URL!",
+            icon: success ? "success" : "error",
             confirmButtonColor: "#002025",
           });
-        }
-      });
+        });
+      } else if (result.isConfirmed && !result.value) {
+        Swal.fire({
+          title: "Du må oppgi en gyldig Untappd link!",
+          text: "Eksempel: https://untappd.com/b/nogne-o-porter/27638",
+          icon: "error",
+          confirmButtonColor: "#002025",
+        });
+      }
     });
+  });
+}
+
+let observersInitialized = false;
+
+function injectBeerInfo() {
+  if (
+    getElement("untappd") ||
+    !getElement("product__layout-wrapper") ||
+    !isProductSupported()
+  ) {
+    return;
+  }
+
+  const beerId = getElement("product__tab-list")
+    ?.getElementsByTagName("li")[1]
+    ?.getElementsByTagName("span")[1]?.innerText;
+
+  if (!beerId) return;
+
+  const elements = createUntappdElements();
+  getElement("product__layout-wrapper").appendChild(elements.container);
+
+  getBeerById(beerId)
+    .then((data) => {
+      if (data?.rating !== undefined && data.rating !== null) {
+        elements.rating.insertBefore(
+          ratingToStars(data.rating.toPrecision(3)),
+          elements.rating.childNodes[1]
+        );
+        elements.link.href = data.untpd_url;
+        elements.link.innerText = `${data.rating.toPrecision(3)} (${kFormatter(
+          data.checkins
+        )})`;
+
+        const date = new Date(data.untpd_updated);
+        elements.updated.innerText = `Oppdatert: ${date.toLocaleDateString(
+          "en-GB"
+        )} ${date.toLocaleTimeString("en-GB")}`;
+        elements.wrong.innerText = "Feil øl?";
+
+        injectIBU(data);
+        updateStyleInfo(data);
+      } else if (data?.detail === "Not found.") {
+        elements.link.innerText = "Ny, oppdateres ved neste kjøring";
+      } else {
+        elements.link.innerText = "Ingen match";
+        elements.wrong.innerText = "Foreslå Untappd match";
+      }
+
+      addBadges(data);
+      setupWrongMatchHandler(elements.wrong, beerId);
+    })
+    .catch((error) => {
+      console.error("Failed to fetch beer data:", error);
+      elements.link.innerText = "Feil ved lasting";
+    });
+}
+
+function initializeProductDetails() {
+  injectBeerInfo();
+
+  if (!observersInitialized) {
+    observersInitialized = true;
+    document.arrive(".product__layout-wrapper", () =>
+      setTimeout(injectBeerInfo, 100)
+    );
+    document.arrive(".product__category-name", () =>
+      setTimeout(injectBeerInfo, 100)
+    );
   }
 }
 
-main();
-
-// Sentry error logging
-Sentry.init({
-  dsn: "https://72b452d00a6b4c8a820c6f122cd717a2@o985007.ingest.sentry.io/5970536",
-  tracesSampleRate: 0.2,
-});
+initializeProductDetails();

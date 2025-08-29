@@ -1,20 +1,139 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="cupcake">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Ølmonopolet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" type="text/css" href="../../assets/css/popup.css" />
   </head>
 
   <body>
-    <a href="https://patreon.com/olmonopolet" target="_blank"
-      ><img class="patreon" src="../../assets/img/patron.png" alt=""
-    /></a>
-    <a href="https://www.facebook.com/BeermonopolyNO/" target="_blank"
-      ><img class="facebook" src="../../assets/img/facebook.png" alt=""
-    /></a>
-    <script src="../../assets/js/sentry.min.js"></script>
-    <script src="./popup.js"></script>
+    <div class="card">
+      <div class="card-body">
+        <div class="flex items-center justify-center gap-3 mb-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-beer-icon lucide-beer"
+          >
+            <path d="M17 11h1a3 3 0 0 1 0 6h-1" />
+            <path d="M9 12v6" />
+            <path d="M13 12v6" />
+            <path
+              d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 2 11 2s2 1.5 3 1.5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5Z"
+            />
+            <path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" />
+          </svg>
+          <h1 class="card-title text-primary">Ølmonopolet</h1>
+        </div>
+        <p class="text-base-content/70 text-center text-sm mb-6">
+          Untappd ratings på Vinmonopolet.no
+        </p>
+
+        <div class="text-center mb-6">
+          <p class="text-base-content/60 text-xs leading-relaxed">
+            En tjeneste for å finne det beste av øl, sider og mjød på
+            Vinmonopolet.
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-3">
+          <a
+            href="https://olmonopolet.app/"
+            target="_blank"
+            class="btn btn-primary"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-beer-icon lucide-beer"
+            >
+              <path d="M17 11h1a3 3 0 0 1 0 6h-1" />
+              <path d="M9 12v6" />
+              <path d="M13 12v6" />
+              <path
+                d="M14 7.5c-1 0-1.44.5-3 .5s-2-.5-3-.5-1.72.5-2.5.5a2.5 2.5 0 0 1 0-5c.78 0 1.57.5 2.5.5S9.44 2 11 2s2 1.5 3 1.5 1.72-.5 2.5-.5a2.5 2.5 0 0 1 0 5c-.78 0-1.5-.5-2.5-.5Z"
+              />
+              <path d="M5 8v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V8" />
+            </svg>
+            Besøk olmonopolet.app
+          </a>
+
+          <a
+            href="https://patreon.com/olmonopolet"
+            target="_blank"
+            class="btn btn-outline btn-accent"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-heart-handshake-icon lucide-heart-handshake"
+            >
+              <path
+                d="M19.414 14.414C21 12.828 22 11.5 22 9.5a5.5 5.5 0 0 0-9.591-3.676.6.6 0 0 1-.818.001A5.5 5.5 0 0 0 2 9.5c0 2.3 1.5 4 3 5.5l5.535 5.362a2 2 0 0 0 2.879.052 2.12 2.12 0 0 0-.004-3 2.124 2.124 0 1 0 3-3 2.124 2.124 0 0 0 3.004 0 2 2 0 0 0 0-2.828l-1.881-1.882a2.41 2.41 0 0 0-3.409 0l-1.71 1.71a2 2 0 0 1-2.828 0 2 2 0 0 1 0-2.828l2.823-2.762"
+              />
+            </svg>
+            Støtt på Patreon
+          </a>
+
+          <a
+            href="https://www.facebook.com/BeermonopolyNO/"
+            target="_blank"
+            class="btn btn-outline btn-secondary"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-facebook-icon lucide-facebook"
+            >
+              <path
+                d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"
+              />
+            </svg>
+            Følg på Facebook
+          </a>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <p class="text-base-content/40 text-xs text-center">
+          © 2025 Ølmonopolet. Ikke tilknyttet Vinmonopolet.
+        </p>
+      </div>
+    </div>
   </body>
 </html>

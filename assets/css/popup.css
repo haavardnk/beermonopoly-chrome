@@ -1,46 +1,255 @@
+/* DaisyUI-inspired CSS Variables (Caramellatte Theme) */
+:root {
+  --primary: #d97706;
+  --primary-content: #ffffff;
+  --secondary: #ec4899;
+  --secondary-content: #ffffff;
+  --accent: #f59e0b;
+  --accent-content: #ffffff;
+  --neutral: #78716c;
+  --neutral-content: #ffffff;
+  --base-100: #fefcf9;
+  --base-200: #fef7ed;
+  --base-300: #fed7aa;
+  --base-content: #3d2c1a;
+  --info: #0ea5e9;
+  --info-content: #ffffff;
+  --success: #10b981;
+  --success-content: #ffffff;
+  --warning: #f59e0b;
+  --warning-content: #ffffff;
+  --error: #ef4444;
+  --error-content: #ffffff;
+  
+  /* Shadows and borders */
+  --shadow-sm: 0 1px 2px 0 rgb(120 113 108 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(120 113 108 / 0.1), 0 2px 4px -2px rgb(120 113 108 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(120 113 108 / 0.1), 0 4px 6px -4px rgb(120 113 108 / 0.1);
+  --border-radius: 0.5rem;
+  --border-radius-sm: 0.25rem;
+  --border-radius-lg: 1rem;
+}
+
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   width: 300px;
-  height: auto;
+  min-height: 400px;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+  background: var(--base-100);
+  color: var(--base-content);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
 }
 
-div {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50%;
-  height: 25%;
-  padding: 5px;
-  font-size: 2em;
-  background-color: #ffb000;
-  border-radius: 5px;
-  text-align: center;
-  color: white;
-  font-family: ProximaNova, Helvetica, sans-serif;
-  font-weight: bold;
-  margin-bottom: 15px;
+/* DaisyUI Card Component */
+.card {
+  background: var(--base-100);
+  border-radius: var(--border-radius-lg);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--base-300);
+  overflow: hidden;
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-body {
+  padding: 2rem 1.5rem;
+  flex: 1;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+  color: var(--primary);
+}
+
+.card-footer {
+  padding: 1rem 1.5rem;
+  background: var(--base-200);
+  border-top: 1px solid var(--base-300);
+  margin-top: auto;
+}
+
+/* DaisyUI Button Components */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--border-radius);
+  border: 1px solid transparent;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
-  transition-duration: 0.3s;
+  user-select: none;
+  min-height: 3rem;
+  text-align: center;
+  box-shadow: var(--shadow-sm);
 }
 
-div:hover {
-  background-color: black;
-  transform: translateX(-50%) scale(1.1);
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
 }
 
-.patreon {
-  height: 50px;
-  float: left;
-  border: 0;
-  margin-bottom: 10px;
-}
-.facebook {
-  height: 48px;
-  float: left;
-  border: 0;
-  margin-top: 1px;
-  margin-bottom: 10px;
+.btn:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-sm);
 }
 
-h1 {
-  font-size: 1.75em;
+/* Primary button */
+.btn-primary {
+  background: var(--primary);
+  color: var(--primary-content);
+  border-color: var(--primary);
+}
+
+.btn-primary:hover {
+  background: color-mix(in srgb, var(--primary) 90%, black);
+  border-color: color-mix(in srgb, var(--primary) 90%, black);
+}
+
+/* Outline buttons */
+.btn-outline {
+  background: transparent;
+  border: 2px solid;
+}
+
+.btn-outline.btn-accent {
+  color: var(--secondary);
+  border-color: var(--secondary);
+}
+
+.btn-outline.btn-accent:hover {
+  background: var(--secondary);
+  color: var(--secondary-content);
+}
+
+.btn-outline.btn-secondary {
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.btn-outline.btn-secondary:hover {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* Utility classes (DaisyUI-style) */
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.gap-3 {
+  gap: 0.75rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+.w-5 {
+  width: 1.25rem;
+}
+
+.h-5 {
+  height: 1.25rem;
+}
+
+.w-7 {
+  width: 1.75rem;
+}
+
+.h-7 {
+  height: 1.75rem;
+}
+
+.text-sm {
+  font-size: 0.875rem;
+}
+
+.text-xs {
+  font-size: 0.75rem;
+}
+
+.text-lg {
+  font-size: 1.125rem;
+}
+
+.text-base {
+  font-size: 1rem;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-base-content\/70 {
+  color: color-mix(in srgb, var(--base-content) 85%, transparent);
+}
+
+.text-base-content\/60 {
+  color: color-mix(in srgb, var(--base-content) 75%, transparent);
+}
+
+.text-base-content\/40 {
+  color: color-mix(in srgb, var(--base-content) 60%, transparent);
+}
+
+.leading-relaxed {
+  line-height: 1.625;
+}
+
+/* Component-specific styles */
+img {
+  display: block;
+}
+
+a {
+  text-decoration: none;
+}
+
+/* Dark theme support - removed for light-only caramellatte theme */
+
+/* Responsive design */
+@media (max-width: 320px) {
+  .card-body {
+    padding: 1.5rem 1rem;
+  }
+  
+  .btn {
+    font-size: 0.8rem;
+    padding: 0.65rem 0.875rem;
+  }
 }

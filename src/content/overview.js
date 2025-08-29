@@ -1,212 +1,142 @@
-var state = 0;
-var observe_state = 0;
-var categories = ["ØL", "SIDER", "MJØD"];
+const state = { processing: 0, observersInitialized: 0 };
+
+function createProductElements() {
+  const elements = createBaseElements();
+
+  elements.userRating = document.createElement("span");
+  elements.logoUser = document.createElement("img");
+  elements.linkCheckin = document.createElement("a");
+  elements.triangle = document.createElement("div");
+  elements.checkmark = document.createElement("img");
+  elements.star2 = document.createElement("img");
+
+  elements.triangle.classList.add("triangle-overview");
+  elements.logoUser.classList.add("logo-overview");
+  elements.star2.classList.add("star-overview");
+
+  elements.logoUser.src = chrome.runtime.getURL("assets/img/user.svg");
+  elements.checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
+  elements.star2.src = chrome.runtime.getURL("assets/img/star-solid.svg");
+
+  elements.linkCheckin.target = "_blank";
+  elements.linkCheckin.rel = "noopener noreferrer";
+
+  return elements;
+}
+
+function updateCategoryStyle(product, beerInfo) {
+  const categoryElement = product.getElementsByClassName(
+    "product__category-name"
+  )[0];
+  if (!categoryElement) return;
+
+  const stylePart = categoryElement.innerText.includes("ØL")
+    ? beerInfo.style
+    : beerInfo.style.split("-")[1] || beerInfo.style;
+
+  categoryElement.textContent += " - " + stylePart;
+}
+
+function addUserRating(elements, product, beerInfo) {
+  if (
+    !beerInfo.hasOwnProperty("user_checked_in") ||
+    !beerInfo.user_checked_in.length
+  )
+    return;
+
+  elements.rating.appendChild(elements.userRating);
+  elements.userRating.appendChild(elements.logoUser);
+  elements.userRating.appendChild(elements.linkCheckin);
+  elements.userRating.appendChild(elements.star2);
+
+  elements.linkCheckin.href = beerInfo.untpd_url + "?filter=you";
+  elements.linkCheckin.innerText =
+    beerInfo.user_checked_in[0].rating.toPrecision(3);
+
+  elements.triangle.appendChild(elements.checkmark);
+  const srOnly = product.getElementsByClassName("sr-only")[0];
+  if (srOnly) {
+    product.insertBefore(elements.triangle, srOnly);
+  }
+}
 
 function createRatings(products, beer_info) {
-  for (let i = 0; i < products.length; i++) {
-    if (
-      categories.includes(
-        products[i].getElementsByClassName("product__category-name")[0]
-          .innerText
-      ) &&
-      products[i].getElementsByClassName("untappd").length === 0
-    ) {
-      let id = products[i].getElementsByClassName("product__code")[0].innerText;
+  products.forEach((product) => {
+    if (!isProductSupported(product)) return;
+    if (hasExistingUntappd(product)) return;
 
-      // Construct HTML
-      let olmonopolet = document.createElement("div");
-      let untappd = document.createElement("div");
-      let untappd_rating = document.createElement("div");
-      let user_rating = document.createElement("span");
-      let logo = document.createElement("img");
-      let logo_user = document.createElement("img");
-      let link = document.createElement("a");
-      let link_checkin = document.createElement("a");
-      let triangle = document.createElement("div");
-      let checkmark = document.createElement("img");
-      let star1 = document.createElement("img");
-      let star2 = document.createElement("img");
+    const id = product.getElementsByClassName("product__code")[0]?.innerText;
+    if (!id || !beer_info[id]) return;
 
-      untappd.classList.add("untappd");
-      triangle.classList.add("triangle-overview");
-      logo.classList.add("logo-overview");
-      logo_user.classList.add("logo-overview");
-      star1.classList.add("star-overview");
-      star2.classList.add("star-overview");
+    const elements = createProductElements();
+    const bottomContainer = product.getElementsByClassName(
+      "product-item__bottom-container"
+    )[0];
+    if (!bottomContainer) return;
 
-      logo.src = chrome.runtime.getURL("assets/img/untappd.svg");
-      logo_user.src = chrome.runtime.getURL("assets/img/user.svg");
-      checkmark.src = chrome.runtime.getURL("assets/img/check-solid.svg");
-      star1.src = chrome.runtime.getURL("assets/img/star-solid.svg");
-      star2.src = chrome.runtime.getURL("assets/img/star-solid.svg");
+    bottomContainer.appendChild(elements.container);
 
-      olmonopolet.appendChild(untappd);
-      untappd.appendChild(untappd_rating);
-      untappd_rating.appendChild(logo);
-      untappd_rating.appendChild(link);
-      untappd_rating.appendChild(star1);
+    const beerInfo = beer_info[id];
 
-      products[i]
-        .getElementsByClassName("product-item__bottom-container")[0]
-        .appendChild(olmonopolet);
-      if (beer_info[id] !== undefined && beer_info[id].rating !== null) {
-        // Untappd rating
-        link.innerText = beer_info[id].rating.toPrecision(3);
-        link.href = beer_info[id].untpd_url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        // Untappd style
-        if (
-          products[i]
-            .getElementsByClassName("product__category-name")[0]
-            .innerText.includes("ØL")
-        ) {
-          products[i].getElementsByClassName(
-            "product__category-name"
-          )[0].textContent += " - " + beer_info[id].style;
-        } else {
-          products[i].getElementsByClassName(
-            "product__category-name"
-          )[0].textContent += " - " + beer_info[id].style.split("-")[1];
-        }
+    if (setRatingInfo(elements, beerInfo)) {
+      updateCategoryStyle(product, beerInfo);
+      addUserRating(elements, product, beerInfo);
+    }
 
-        // If beer checked in by user
-        if (
-          beer_info[id].hasOwnProperty("user_checked_in") &&
-          beer_info[id].user_checked_in.length > 0
-        ) {
-          // User rating
-          untappd_rating.appendChild(user_rating);
-          user_rating.appendChild(logo_user);
-          user_rating.appendChild(link_checkin);
-          user_rating.appendChild(star2);
-          link_checkin.href = beer_info[id].untpd_url + "?filter=you";
-          link_checkin.innerText =
-            beer_info[id].user_checked_in[0].rating.toPrecision(3);
-          link_checkin.target = "_blank";
-          link_checkin.rel = "noopener noreferrer";
-          // Checked in triangle
-          triangle.appendChild(checkmark);
-          products[i].insertBefore(
-            triangle,
-            products[i].getElementsByClassName("sr-only")[0]
-          );
-        }
+    if (beerInfo) {
+      const badgeContainer = document.createElement("div");
+      badgeContainer.classList.add("badges");
 
-        // If beer has badges
-        if (beer_info[id] !== undefined) {
-          let badges = document.createElement("div");
-          for (let j = 0; j < beer_info[id].badges.length; j++) {
-            let badge = document.createElement("span");
+      beerInfo.badges?.forEach((badge) => {
+        const badgeSpan = document.createElement("span");
+        badgeSpan.innerText = badge.text;
+        badgeContainer.appendChild(badgeSpan);
+      });
 
-            badges.classList.add("badges");
-
-            badge.innerText = beer_info[id].badges[j].text;
-
-            badges.appendChild(badge);
-            olmonopolet.appendChild(badges);
-          }
-        }
-      } else {
-        link.innerText = "Ingen match";
-
-        // If beer has badges
-        if (beer_info[id] !== undefined) {
-          for (let j = 0; j < beer_info[id].badges.length; j++) {
-            let badges = document.createElement("div");
-            let badge = document.createElement("span");
-
-            badges.classList.add("badges");
-
-            badge.innerText = beer_info[id].badges[j].text;
-
-            badges.appendChild(badge);
-            olmonopolet.appendChild(badges);
-          }
-        }
+      if (beerInfo.badges?.length > 0) {
+        elements.container.appendChild(badgeContainer);
       }
     }
-  }
-  state = 0;
+  });
+
+  state.processing = 0;
 }
 
-function getBeerIds(products) {
-  let ids = [];
-  for (let i = 0; i < products.length; i++) {
-    if (
-      categories.includes(
-        products[i].getElementsByClassName("product__category-name")[0]
-          .innerText
-      )
-    ) {
-      ids.push(
-        products[i].getElementsByClassName("product__code")[0].innerText
-      );
-    }
-  }
-  return ids;
-}
+async function processProductOverview() {
+  const products = Array.from(document.getElementsByClassName("product-item"));
+  const ids = getBeerIds(products.filter(isProductSupported));
 
-async function getBeerInfo(beer_ids, api_token) {
-  if (api_token) {
-    let response = await fetch(
-      "https://api.beermonopoly.com/beers/?beers=" +
-        beer_ids.join() +
-        "&fields=vmp_id,style,rating,untpd_url,user_checked_in,badges",
-      {
-        headers: {
-          Authorization: `Token ${api_token}`,
-        },
-      }
-    );
-    let data = await response.json();
-    return data;
-  } else {
-    let response = await fetch(
-      "https://api.beermonopoly.com/beers/?beers=" +
-        beer_ids.join() +
-        "&fields=vmp_id,style,rating,untpd_url,badges"
-    );
-    let data = await response.json();
-    return data;
+  if (ids.length === 0) {
+    state.processing = 0;
+    return;
+  }
+
+  try {
+    const data = await getBeerInfo(ids, "vmp_id,style,rating,untpd_url,badges");
+    const beer_info = {};
+
+    data.results?.forEach((beer) => {
+      beer_info[beer.vmp_id] = beer;
+    });
+
+    createRatings(products, beer_info);
+  } catch (error) {
+    console.error("Failed to fetch beer info:", error);
+    state.processing = 0;
   }
 }
 
-function main() {
-  let products = Array.from(document.getElementsByClassName("product-item"));
-  let ids = getBeerIds(products);
-  let beer_info = {};
-  if (ids.length !== 0) {
-    chrome.storage.sync.get(
-      {
-        api_token: null,
-      },
-      async function (result) {
-        getBeerInfo(ids, result.api_token).then(function (data) {
-          for (let i = 0; i < data.results.length; i++) {
-            beer_info[data.results[i].vmp_id] = data.results[i];
-          }
-          createRatings(products, beer_info);
-        });
-      }
-    );
-  } else {
-    state = 0;
-  }
-}
-
-// Load beer info again on change
 function resultsChanged() {
-  if (state === 0) {
-    state = 1;
-    // Run main update
-    setTimeout(main, 100);
-    // Run again if main update fails (VMP using long time to load beers)
-    setTimeout(function () {
-      products = document.getElementsByClassName("product__category-name");
-      for (let i = 0; i < products.length; i++) {
-        if (categories.includes(products[i].innerText)) {
-          main();
+  if (state.processing === 0) {
+    state.processing = 1;
+    setTimeout(processProductOverview, 100);
+    setTimeout(() => {
+      const products = document.getElementsByClassName(
+        "product__category-name"
+      );
+      for (let product of products) {
+        if (BEER_CATEGORIES.includes(product.innerText)) {
+          processProductOverview();
           break;
         }
       }
@@ -214,26 +144,17 @@ function resultsChanged() {
   }
 }
 
-// Wait for Vinmonopolet to load beers
-document.arrive(".product__image-container", function () {
-  let untappd = document.getElementsByClassName("untappd");
-  if (untappd.length === 0 && state === 0) {
-    state = 1;
-    main();
+document.arrive(".product__image-container", () => {
+  const untappd = document.getElementsByClassName("untappd");
+  if (untappd.length === 0 && state.processing === 0) {
+    state.processing = 1;
+    processProductOverview();
   }
 
-  // Add observers of facet changes
-  if (observe_state === 0) {
+  if (state.observersInitialized === 0) {
     document.arrive(".facet-value--selected", resultsChanged);
     document.leave(".facet-value--selected", resultsChanged);
     document.leave(".search-results__sort__list", resultsChanged);
-    observe_state = 1;
+    state.observersInitialized = 1;
   }
-});
-console.log("test");
-
-// Sentry error logging
-Sentry.init({
-  dsn: "https://72b452d00a6b4c8a820c6f122cd717a2@o985007.ingest.sentry.io/5970536",
-  tracesSampleRate: 0.2,
 });
